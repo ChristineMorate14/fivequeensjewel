@@ -240,92 +240,110 @@
   <script>
     // ---------- Demo products ----------
     const demoProducts = [
+  {
+    id:"p1",
+    title:"Royal Pearl Necklace",
+    price:2599,
+    cat:"necklaces",
+    img:"Royal Pearl Necklace.jpg",
+    desc:"Elegant pearl necklace"
+  },
+  {
+    id:"p2",
+    title:"Queens Halo Ring",
+    price:1899,
+    cat:"rings",
+    img:"Queens Halo Ring.png",
+    desc:"Stunning halo ring"
+  },
+  {
+    id:"p3",
+    title:"Luxe Pearl Studs",
+    price:799,
+    cat:"earrings",
+    img:"Luxe Pearl Studs.png",
+    desc:"Premium pearl studs"
+  },
+  {
+    id:"p4",
+    title:"Rose Gold Bangle",
+    price:1299,
+    cat:"bracelets",
+    img:"Rose Gold Bangle.png",
+    desc:"Rose gold bangle"
+  },
+  {
+    id:"p5",
+    title:"Emerald Drop Earrings",
+    price:2199,
+    cat:"earrings",
+    img:"Emerald Drop Earrings.png",
+    desc:"Emerald earrings"
+  },
+  {
+    id:"p6",
+    title:"Silver Minimalist Ring",
+    price:699,
+    cat:"rings",
+    img:"Silver Minimalist Ring.png",
+    desc:"Minimalist ring"
+  },
+  {
+    id:"p7",
+    title:"Amethyst Pendant",
+    price:1499,
+    cat:"necklaces",
+    img:"Amethyst Pendant.png",
+    desc:"Amethyst necklace"
+  },
+  {
+    id:"p8",
+    title:"Stackable Ring Set",
+    price:1199,
+    cat:"rings",
+    img:"Stackable Ring Set.png",
+    desc:"Ring stacking set"
+  },
+];
+function renderProducts(){
+  productsEl.innerHTML='';
 
-      <!-- ===== PRODUCTS LIST ===== -->
-<section class="products">
+  dataProducts.forEach(p=>{
+    let card=document.createElement('div');
+    card.className="product";
+    card.innerHTML=`
+      <div class="image"><img src="${p.img}" style="max-height:200px"></div>
+      <div class="body">
+        <div><strong>${p.title}</strong></div>
+        <div class="price">₱${money(p.price)}</div>
+        <button class="btn" onclick="openProduct('${p.id}')">View</button>
+      </div>
+    `;
+    productsEl.appendChild(card)
+  });
+}
 
-  <!-- PRODUCT 1 -->
-  <div class="product-card">
-    <img src="Royal Pearl Necklace.jpg" alt="Royal Pearl Necklace">
-    <h3>Royal Pearl Necklace</h3>
-    <p class="price">₱2599</p>
-    <button onclick="addToCart('Royal Pearl Necklace',2599,'Royal Pearl Necklace.jpg')">
-      Add to Cart
-    </button>
-  </div>
+renderProducts();
 
-  <!-- PRODUCT 2 -->
-  <div class="product-card">
-    <img src="Queens Halo Ring.png" alt="Queens Halo Ring">
-    <h3>Queens Halo Ring</h3>
-    <p class="price">₱1,899</p>
-    <button onclick="addToCart('Queens Halo Ring',1899,'Queens Halo Ring.png')">
-      Add to Cart
-    </button>
-  </div>
+function openProduct(id){
+  const p=dataProducts.find(x=>x.id===id);
+  document.getElementById('modalImage').innerHTML=`<img src="${p.img}" style="max-height:300px">`;
+  document.getElementById('modalTitle').textContent=p.title;
+  document.getElementById('modalPrice').textContent="₱"+p.price;
+  document.getElementById('modalCategory').textContent=p.cat;
+  document.getElementById('modalDesc').textContent=p.desc;
+  document.getElementById('addToCartBtn').onclick=()=>addToCart(p);
+  document.getElementById('modalBackdrop').style.display='flex';
+}
 
-  <!-- PRODUCT 3 -->
-  <div class="product-card">
-    <img src="Luxe Pearl Studs.png" alt="Luxe Pearl Studs">
-    <h3>Luxe Pearl Studs</h3>
-    <p class="price">₱799</p>
-    <button onclick="addToCart('Luxe Pearl Studs',799,'Luxe Pearl Studs.png')">
-      Add to Cart
-    </button>
-  </div>
+function addToCart(p){
+  if(!cart[p.id]) cart[p.id]={qty:0};
+  cart[p.id].qty+=Number(document.getElementById('qty').value || 1);
+  save(KEY_CART,cart);
+  alert(`${p.title} added to cart!`);
+}
 
-  <!-- PRODUCT 4 -->
-  <div class="product-card">
-    <img src="Rose Gold Bangle" alt="Rose Gold Bangle.png">
-    <h3>Rose Gold Bangle</h3>
-    <p class="price">₱799</p>
-    <button onclick="addToCart('Rose Gold Bangle',1299,'Rose Gold Bangle.png')">
-      Add to Cart
-    </button>
-  </div>
 
-        <!-- PRODUCT 5 -->
-  <div class="product-card">
-    <img src="Emerald Drop Earrings" alt="Rose Gold Bangle.png">
-    <h3>Emerald Drop Earrings</h3>
-    <p class="price">₱2199</p>
-    <button onclick="addToCart('Emerald Drop Earrings',2199,'Rose Gold Bangle.png')">
-      Add to Cart
-    </button>
-  </div>
-
-        <!-- PRODUCT 6 -->
-  <div class="product-card">
-    <img src="Silver Minimalist Ring" alt="Rose Gold Bangle.png">
-    <h3>Silver Minimalist Ring</h3>
-    <p class="price">₱699</p>
-    <button onclick="addToCart('Silver Minimalist Ring',699,'Rose Gold Bangle.png')">
-      Add to Cart
-    </button>
-  </div>
-
-              <!-- PRODUCT 7 -->
-  <div class="product-card">
-    <img src="Amethyst Pendant" alt="Rose Gold Bangle.png">
-    <h3>Amethyst Pendant</h3>
-    <p class="price">₱1499</p>
-    <button onclick="addToCart('Amethyst Pendant',1499,'Rose Gold Bangle.png')">
-      Add to Cart
-    </button>
-  </div>
-
-              <!-- PRODUCT 8 -->
-  <div class="product-card">
-    <img src="Stackable Ring Set" alt="Rose Gold Bangle.png">
-    <h3>Stackable Ring Set</h3>
-    <p class="price">₱1199</p>
-    <button onclick="addToCart('Stackable Ring Set',1199,'Rose Gold Bangle.png')">
-      Add to Cart
-    </button>
-  </div>
-
-</section>
-    ];
 
     // ---------- LocalStorage keys ----------
     const KEY_PRODUCTS = 'fq_products_v1';
