@@ -2,108 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Five Queens Jewelry — Shop</title>
-  <meta name="description" content="Five Queens Jewelry — demo e-commerce jewelry store with sales tracking and monthly best-seller report." />
-  <!-- GOOGLE FONTS FOR A MODERN LOOK -->
-  <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
+  <meta name="description" content="Five Queens Jewelry — demo e‑commerce storefront with user accounts, orders, and monthly best‑seller report." />
   <style>
-    :root {
-      --accent: #b76e79;
-      --muted: #6b6b6b;
-      --bg: #fffdfb;
-      --card: #ffffff;
-      --shadow: 0 6px 24px rgba(16,24,40,0.08);
-      --radius: 14px;
-      --max: 1100px;
-      --gap: 16px;
-      --nav-h: 64px;
-    }
-    * { box-sizing: border-box }
-    html, body { height: 100%; margin: 0; font-family: 'Inter', Arial, sans-serif; background: linear-gradient(180deg,#fff 0%, #fffdfb 100%);}
-    .container { max-width: var(--max); margin: 0 auto; padding: 18px }
-    a { color: inherit; text-decoration: none }
-    img { max-width: 100%; display: block }
+    :root{--accent:#b76e79;--muted:#6b6b6b;--bg:#fffdfb;--card:#fff;--shadow:0 6px 18px rgba(16,24,40,0.08);--radius:12px;--max:1100px}
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#fff 0%,#fffdfb 100%);color:#111}
+    a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
+    .container{max-width:var(--max);margin:0 auto;padding:16px}
+    header{position:sticky;top:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(6px);box-shadow:var(--shadow);z-index:40}
+    .nav{height:64px;display:flex;align-items:center;gap:12px;padding:8px 16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#ffd6e0,#b76e79);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+    .search{flex:1} .search input{width:100%;padding:10px;border-radius:10px;border:1px solid #eee}
+    .icons{display:flex;gap:8px}
+    .icon-btn{padding:8px 10px;border-radius:10px;border:1px solid #eee;background:#fff;cursor:pointer}
 
-    header { position: sticky; top: 0; z-index: 40; background: rgba(255,255,255,0.96); backdrop-filter: blur(7px); box-shadow: var(--shadow) }
-    .nav { height: var(--nav-h); display: flex; align-items: center; gap: 14px; padding: 8px 18px }
-    .brand { display: flex; align-items: center; gap: 14px; font-weight: 700 }
-    .brand .logo { width:44px; height:44px; background: linear-gradient(135deg,#ffd6e0,#b76e79); border-radius: 10px; display:flex; align-items:center; justify-content:center; color:white; font-size: 18px }
-    .search { flex: 1; display: flex }
-    .search input { flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid #eee }
-    .icons { display: flex; gap: 8px; align-items: center }
-    .icon-btn { padding:8px 12px; border-radius:10px; border: 1px solid #eee; background: white; font-weight:600; cursor:pointer; transition:background .2s }
-    .icon-btn:hover { background: #f8e5e9 }
+    main{padding:18px}
+    .grid{display:grid;grid-template-columns:320px 1fr;gap:16px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+    .products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:1100px){.products{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){.products{grid-template-columns:1fr}}
+    .product{border-radius:12px;overflow:hidden;border:1px solid #f3e3e8;background:linear-gradient(180deg,#fff,#fff7f9)}
+    .product .image{height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#fff7f9)}
+    .body{padding:12px}
+    .price{font-weight:700;color:var(--accent)}
+    .btn{padding:8px 12px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer}
+    .chip{padding:8px 10px;border-radius:999px;border:1px solid #eee;background:#fff;cursor:pointer}
 
-    main { padding:18px }
-    .grid { display: grid; grid-template-columns: 320px 1fr; gap: var(--gap) }
-    @media(max-width:900px){ .grid { grid-template-columns:1fr; } .aside{order:2}}
-    .aside { background: var(--card); border-radius: 12px; padding: 12px; box-shadow: var(--shadow)}
-    .card { background: var(--card); border-radius: 12px; padding: 12px; box-shadow: var(--shadow); margin-bottom: 18px }
+    .cart-drawer{position:fixed;right:16px;bottom:18px;width:360px;max-width:calc(100% - 32px);border-radius:14px;background:linear-gradient(180deg,#fff,#fffdfb);box-shadow:0 18px 40px rgba(10,10,10,0.12);padding:12px;display:none}
+    .cart-item{display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px dashed #f3eaea}
 
-    .products { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px }
-    @media(max-width:1100px){ .products { grid-template-columns: repeat(2,1fr) } }
-    @media(max-width:600px){ .products { grid-template-columns:1fr } }
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:20px}
+    .modal{background:var(--card);border-radius:12px;max-width:940px;width:100%;box-shadow:var(--shadow);display:flex;gap:12px;overflow:hidden}
+    .modal .left{flex:1;padding:18px}.modal .right{width:320px;padding:18px}
 
-    .product { border-radius:12px; overflow:hidden; border:1px solid #f0eaea; background: linear-gradient(180deg,rgba(255,255,255,0.6),#fff);}
-    .product .image { height:220px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#fff,#fff7f9);}
-    .product .body { padding:12px }
-    .product h4 { margin:0 0 8px; font-size: 17px }
-    .price { font-weight:700; color:var(--accent); font-size:17px }
-    .meta { font-size:13px; color: var(--muted)}
-    .btn { display:inline-block; padding:8px 12px; border-radius:10px; border:0; background:var(--accent); color:white; cursor:pointer; font-weight:600 }
-    .chip { padding:7px 13px; border-radius:999px; border:1px solid #eee; background:#fff; cursor:pointer; margin:2px 2px; font-size:13px; font-weight:500; transition:background .2s }
-    .chip:hover { background: #f7e6ea }
-
-    /* Cart drawer & modal */
-    .cart-drawer { position: fixed; right:18px; bottom:18px; width:360px; max-width: calc(100% - 36px); border-radius: 14px; background: linear-gradient(180deg,#fff,#fffdfb); box-shadow:0 20px 50px rgba(10,10,10,0.09); padding:20px 18px; display:none; z-index:100; }
-    .cart-item { display:flex; gap:12px; align-items: center; padding:8px 0; border-bottom:1px dashed #f3eaea }
-    .cart-drawer .btn, .cart-drawer .chip { font-size:15px }
-
-    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.44); display:none; align-items:center; justify-content:center; padding:20px; z-index:500}
-    .modal { background:var(--card); border-radius:12px; max-width:900px; width:100%; box-shadow:var(--shadow); display: flex; gap: 12px; overflow: hidden }
-    .modal .left { flex: 1; padding: 18px; min-width:220px }
-    .modal .right { width:320px; padding:18px }
-
-    /* Admin/report */
-    .admin-row { display:flex; gap:8px; flex-wrap:wrap }
-    .muted { color: var(--muted); font-size:13px }
-    .center { text-align: center }
-
-    footer{padding:30px 0; text-align:center; color:var(--muted)}
-    footer .container { max-width: 650px }
-
-    /* Mobile */
-    @media(max-width:600px){
-      header .nav { flex-direction:column; gap:18px }
-      .aside { padding:5px; }
-      .card { padding:8px; font-size:15px }
-      .modal { flex-direction:column; width:100%; }
-      .modal .right { width:100% }
-      .modal .left { min-width:unset }
-    }
-
-    /* Hide scrollbars on modal */
-    .modal::-webkit-scrollbar,.cart-drawer::-webkit-scrollbar{display:none}
+    footer{padding:24px;text-align:center;color:var(--muted)}
+    .muted{color:var(--muted)}
+    .center{text-align:center}
+    label{display:block;margin-bottom:6px;font-weight:600}
+    input,select,textarea{padding:8px;border-radius:8px;border:1px solid #eee;width:100%}
+    small{color:var(--muted)}
   </style>
 </head>
 <body>
   <header>
     <div class="nav container">
       <div class="brand">
-        <div class="logo">
-          <img src="logo.png" alt="Five Queens Jewelry Logo"
-            style="height:40px; width:auto;" />
-        </div>
+        <div class="logo">FQ</div>
         <div>
-          <div style="font-size:16px; font-weight:700;">Five Queens Jewelry</div>
-          <div style="font-size:12px; color:var(--muted)">Fine pieces • Metro Manila</div>
+          <div style="font-weight:700">Five Queens Jewelry</div>
+          <div style="font-size:12px;color:var(--muted)">Shine with the elegance of a Queen</div>
         </div>
       </div>
+
       <div class="search">
         <input id="searchInput" placeholder="Search jewelry, e.g. necklace, ring..." />
       </div>
+
       <div class="icons">
+        <div class="icon-btn" id="openAuthBtn">Login / Register</div>
         <div class="icon-btn" id="openAdmin">Admin</div>
         <div class="icon-btn" id="openReport">Monthly Best</div>
         <div class="icon-btn" id="openCartBtn">Cart (<span id="cartCount">0</span>)</div>
@@ -113,9 +73,9 @@
 
   <main class="container">
     <div class="grid">
-      <aside class="aside">
-        <div class="card">
-          <h3>Categories</h3>
+      <aside class="card">
+        <h3>Categories</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
           <div class="chip" data-cat="all">All</div>
           <div class="chip" data-cat="rings">Rings</div>
           <div class="chip" data-cat="necklaces">Necklaces</div>
@@ -123,9 +83,15 @@
           <div class="chip" data-cat="bracelets">Bracelets</div>
         </div>
 
-        <div style="height:16px"></div>
-        <div class="card">
-          <h3>Cart Summary</h3>
+        <div style="height:12px"></div>
+
+        <div>
+          <h4>Profile</h4>
+          <div id="profileArea" class="muted">Not logged in.</div>
+          <div style="height:8px"></div>
+          <div><button class="chip" id="openProfile">Edit Profile / Address</button></div>
+          <div style="height:12px"></div>
+          <h4>Cart Summary</h4>
           <div id="cartSummary">No items yet.</div>
           <div style="height:12px"></div>
           <button class="btn" id="checkoutBtn">Proceed to Checkout</button>
@@ -135,14 +101,17 @@
       <section>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <h2>Featured</h2>
-          <div class="muted">Mobile‑friendly • Demo store</div>
+          <div class="muted">Wear your confidence. Wear your crown.</div>
         </div>
+
         <div id="products" class="products"></div>
       </section>
     </div>
+
+    <div style="margin-top:18px" id="userOrdersSection"></div>
   </main>
 
-  <!-- Cart drawer -->
+  <!-- cart drawer -->
   <div id="cartDrawer" class="cart-drawer">
     <h3>Cart</h3>
     <div id="cartItems"></div>
@@ -152,17 +121,17 @@
     </div>
   </div>
 
-  <!-- Modal for product view -->
+  <!-- product modal -->
   <div id="modalBackdrop" class="modal-backdrop">
     <div class="modal">
       <div class="left">
-        <div id="modalImage" style="height:320px;background:linear-gradient(180deg,#fff,#fff7f9);display:flex;align-items:center;justify-content:center"></div>
+        <div id="modalImage" style="height:340px;display:flex;align-items:center;justify-content:center">Image</div>
       </div>
       <div class="right">
-        <h3 id="modalTitle"></h3>
-        <div class="price" id="modalPrice"></div>
-        <div class="meta" id="modalCategory"></div>
-        <p id="modalDesc" class="muted"></p>
+        <h3 id="modalTitle">Title</h3>
+        <div class="price" id="modalPrice">₱0</div>
+        <div class="meta" id="modalCategory">Category</div>
+        <p id="modalDesc" class="muted">Description</p>
         <div style="height:12px"></div>
         <div style="display:flex;gap:8px">
           <input id="qty" type="number" value="1" min="1" style="width:70px;padding:8px;border-radius:8px;border:1px solid #eee" />
@@ -172,363 +141,444 @@
     </div>
   </div>
 
-  <!-- Admin modal -->
-  <div id="adminModal" class="modal-backdrop">
-    <div class="modal" style="max-width:900px;">
-      <div class="left" style="flex:1">
-        <h3>Admin — Record Sales</h3>
-        <p class="muted">Simulate orders and track monthly sales counts. Data is stored in your browser (localStorage).</p>
-        <label>Pick product</label>
-        <select id="adminProduct" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee"></select>
-        <div style="height:8px"></div>
-        <label>Quantity</label>
-        <input id="adminQty" type="number" value="1" min="1" style="width:120px;padding:8px;border-radius:8px;border:1px solid #eee" />
-        <div style="height:8px"></div>
-        <label>Month (YYYY-MM)</label>
-        <input id="adminMonth" type="month" style="padding:8px;border-radius:8px;border:1px solid #eee" />
-        <div style="height:10px"></div>
-        <button class="btn" id="recordSale">Record Sale</button>
-        <div style="height:12px"></div>
-        <h4>Recent simulated orders</h4>
-        <div id="adminOrders"></div>
-      </div>
-      <div class="right">
-        <h3>Tools</h3>
-        <button class="chip" id="resetData">Reset All Data</button>
-        <button class="chip" id="exportData">Export JSON</button>
-        <div class="muted">Exported JSON contains products, orders and monthly sales counts.</div>
+  <!-- auth modal (register/login) -->
+  <div id="authModal" class="modal-backdrop">
+    <div class="modal" style="max-width:720px;flex-direction:column;padding:18px">
+      <h3 id="authTitle">Login or Register</h3>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px">
+          <h4>Register</h4>
+          <label>Full name</label><input id="regName" />
+          <label>Email</label><input id="regEmail" type="email" />
+          <label>Password</label><input id="regPass" type="password" />
+          <label>Phone</label><input id="regPhone" />
+          <label>Address</label><textarea id="regAddress" rows="3"></textarea>
+          <div style="height:8px"></div>
+          <button class="btn" id="doRegister">Create account</button>
+          <small>Accounts are stored locally for demo only.</small>
+        </div>
+        <div style="flex:1;min-width:260px">
+          <h4>Login</h4>
+          <label>Email</label><input id="loginEmail" type="email" />
+          <label>Password</label><input id="loginPass" type="password" />
+          <div style="height:8px"></div>
+          <button class="btn" id="doLogin">Login</button>
+          <div style="height:8px"></div>
+          <div class="muted">If you registered before on this browser you'll remain logged in. No external servers are used in this demo.</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Report modal -->
-  <div id="reportModal" class="modal-backdrop">
-    <div class="modal" style="max-width:900px;">
-      <div style="padding:18px;width:100%">
-        <h3>Monthly Best Sellers</h3>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
-          <label>Choose month</label>
-          <input id="reportMonth" type="month" />
+  <!-- profile modal -->
+  <div id="profileModal" class="modal-backdrop">
+    <div class="modal" style="max-width:720px;flex-direction:column;padding:18px">
+      <h3>Profile / Shipping</h3>
+      <label>Full name</label><input id="profileName" />
+      <label>Email (readonly)</label><input id="profileEmail" readonly />
+      <label>Phone</label><input id="profilePhone" />
+      <label>Address</label><textarea id="profileAddress" rows="3"></textarea>
+      <div style="height:8px"></div>
+      <button class="btn" id="saveProfile">Save Profile</button>
+      <div style="height:8px"></div>
+      <button class="chip" id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <!-- admin modal -->
+  <div id="adminModal" class="modal-backdrop">
+    <div class="modal" style="max-width:1000px;flex-direction:column;padding:18px">
+      <div style="display:flex;gap:12px">
+        <div style="flex:1">
+          <h3>Admin — Orders & Sales</h3>
+          <p class="muted">Record demo sales, view and change order status (pending → paid → delivered).</p>
+          <label>Pick product to simulate sale</label>
+          <select id="adminProduct"></select>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <input id="adminQty" type="number" value="1" style="width:120px" />
+            <input id="adminMonth" type="month" />
+            <button class="btn" id="recordSale">Record Sale</button>
+          </div>
+
+          <div style="height:12px"></div>
+          <h4>Recent simulated orders</h4>
+          <div id="adminOrders"></div>
         </div>
-        <div id="reportContent"></div>
+        <div style="width:360px">
+          <h4>Order Management</h4>
+          <label>Filter</label>
+          <select id="adminFilter"><option value="all">All</option><option value="pending">Pending</option><option value="paid">Paid</option><option value="delivered">Delivered</option></select>
+          <div style="height:8px"></div>
+          <div id="adminOrderList" style="max-height:420px;overflow:auto"></div>
+          <div style="height:12px"></div>
+          <button class="chip" id="exportData">Export JSON</button>
+          <button class="chip" id="resetData">Reset Orders & Sales</button>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- report modal -->
+  <div id="reportModal" class="modal-backdrop">
+    <div class="modal" style="max-width:900px;flex-direction:column;padding:18px">
+      <h3>Monthly Best Sellers</h3>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+        <label>Choose month</label>
+        <input id="reportMonth" type="month" />
+      </div>
+      <div id="reportContent"></div>
     </div>
   </div>
 
   <footer>
     <div class="container">
       <div style="font-weight:700">Five Queens Jewelry</div>
-      <div class="muted">Demo storefront — not connected to live payment gateways. Sales data stored in browser for demo and reporting purposes.</div>
+      <div class="muted">Demo storefront — no real payments. Data stored locally (localStorage).</div>
     </div>
   </footer>
 
   <script>
-    // --- Demo product list
+    // ---------- Demo products ----------
     const demoProducts = [
-      {
-        id:'p1',
-        title:'Royal Pearl Necklace',
-        price:2599,
-        cat:'necklaces',
-        desc:'Freshwater pearl necklace with rose-gold plating.',
-        img:'Royal Pearl Necklace.jpg'
-      },
-      {id:'p2',title:'Queens Halo Ring',price:1899,cat:'rings',desc:'Cubic zirconia halo ring inspired by royal crowns.',img:'https://images.unsplash.com/photo-1547332175-0d6577b9a2f9?auto=format&fit=crop&w=800&q=80'},
-      {id:'p3',title:'Luxe Pearl Studs',price:799,cat:'earrings',desc:'Minimal pearl studs with secure backs.',img:'https://images.unsplash.com/photo-1576675785542-01d7158d9b9b?auto=format&fit=crop&w=800&q=80'},
-      {id:'p4',title:'Rose Gold Bangle',price:1299,cat:'bracelets',desc:'Slim bangle with hammered finish.',img:'https://images.unsplash.com/photo-1547394765-84b2b9f5c0b3?auto=format&fit=crop&w=800&q=80'},
-      {id:'p5',title:'Emerald Drop Earrings',price:2199,cat:'earrings',desc:'Emerald-simulated drop earrings for evening wear.',img:'https://images.unsplash.com/photo-1520975698516-2a54b0f1c3d1?auto=format&fit=crop&w=800&q=80'},
-      {id:'p6',title:'Silver Minimalist Ring',price:699,cat:'rings',desc:'Everyday silver band, polished finish.',img:'https://images.unsplash.com/photo-1549991439-5b0f6a3f8b4b?auto=format&fit=crop&w=800&q=80'},
-      {id:'p7',title:'Amethyst Pendant',price:1499,cat:'necklaces',desc:'Purple amethyst pendant on delicate chain.',img:'https://images.unsplash.com/photo-1519837552467-8f7a6a6e5ddb?auto=format&fit=crop&w=800&q=80'},
-      {id:'p8',title:'Stackable Ring Set',price:1199,cat:'rings',desc:'Three stackable rings in mixed metals.',img:'https://images.unsplash.com/photo-1599681684530-9c9a2d9f99a4?auto=format&fit=crop&w=800&q=80'}
+
+      <!-- ===== PRODUCTS LIST ===== -->
+<section class="products">
+
+  <!-- PRODUCT 1 -->
+  <div class="product-card">
+    <img src="Royal Pearl Necklace.jpg" alt="Royal Pearl Necklace">
+    <h3>Royal Pearl Necklace</h3>
+    <p class="price">₱2599</p>
+    <button onclick="addToCart('Royal Pearl Necklace',2599,'Royal Pearl Necklace.jpg')">
+      Add to Cart
+    </button>
+  </div>
+
+  <!-- PRODUCT 2 -->
+  <div class="product-card">
+    <img src="Queens Halo Ring.png" alt="Queens Halo Ring">
+    <h3>Queens Halo Ring</h3>
+    <p class="price">₱1,899</p>
+    <button onclick="addToCart('Queens Halo Ring',1899,'Queens Halo Ring.png')">
+      Add to Cart
+    </button>
+  </div>
+
+  <!-- PRODUCT 3 -->
+  <div class="product-card">
+    <img src="Luxe Pearl Studs.png" alt="Luxe Pearl Studs">
+    <h3>Luxe Pearl Studs</h3>
+    <p class="price">₱799</p>
+    <button onclick="addToCart('Luxe Pearl Studs',799,'Luxe Pearl Studs.png')">
+      Add to Cart
+    </button>
+  </div>
+
+  <!-- PRODUCT 4 -->
+  <div class="product-card">
+    <img src="Rose Gold Bangle" alt="Rose Gold Bangle.png">
+    <h3>Rose Gold Bangle</h3>
+    <p class="price">₱799</p>
+    <button onclick="addToCart('Rose Gold Bangle',1299,'Rose Gold Bangle.png')">
+      Add to Cart
+    </button>
+  </div>
+
+        <!-- PRODUCT 5 -->
+  <div class="product-card">
+    <img src="Emerald Drop Earrings" alt="Rose Gold Bangle.png">
+    <h3>Emerald Drop Earrings</h3>
+    <p class="price">₱2199</p>
+    <button onclick="addToCart('Emerald Drop Earrings',2199,'Rose Gold Bangle.png')">
+      Add to Cart
+    </button>
+  </div>
+
+        <!-- PRODUCT 6 -->
+  <div class="product-card">
+    <img src="Silver Minimalist Ring" alt="Rose Gold Bangle.png">
+    <h3>Silver Minimalist Ring</h3>
+    <p class="price">₱699</p>
+    <button onclick="addToCart('Silver Minimalist Ring',699,'Rose Gold Bangle.png')">
+      Add to Cart
+    </button>
+  </div>
+
+              <!-- PRODUCT 7 -->
+  <div class="product-card">
+    <img src="Amethyst Pendant" alt="Rose Gold Bangle.png">
+    <h3>Amethyst Pendant</h3>
+    <p class="price">₱1499</p>
+    <button onclick="addToCart('Amethyst Pendant',1499,'Rose Gold Bangle.png')">
+      Add to Cart
+    </button>
+  </div>
+
+              <!-- PRODUCT 8 -->
+  <div class="product-card">
+    <img src="Stackable Ring Set" alt="Rose Gold Bangle.png">
+    <h3>Stackable Ring Set</h3>
+    <p class="price">₱1199</p>
+    <button onclick="addToCart('Stackable Ring Set',1199,'Rose Gold Bangle.png')">
+      Add to Cart
+    </button>
+  </div>
+
+</section>
     ];
 
-    // LOCAL STORAGE KEYS
+    // ---------- LocalStorage keys ----------
     const KEY_PRODUCTS = 'fq_products_v1';
+    const KEY_USERS = 'fq_users_v1';
+    const KEY_CURRENT_USER = 'fq_current_user_v1';
     const KEY_ORDERS = 'fq_orders_v1';
     const KEY_MONTH_SALES = 'fq_month_sales_v1';
+    const KEY_CART = 'fq_cart_demo_v1';
 
-    // --- Helpers
-    function money(n){ return Number(n).toLocaleString('en-PH') }
-    function uid(len=8){ return Math.random().toString(36).slice(2,2+len) }
-    function save(key,val){ localStorage.setItem(key,JSON.stringify(val)) }
-    function load(key,def){ try{ return JSON.parse(localStorage.getItem(key))||def } catch(e){ return def } }
+    // ---------- Helpers ----------
+    function uid(len=8){return Math.random().toString(36).slice(2,2+len)}
+    function money(n){return Number(n).toLocaleString('en-PH')}
+    function save(key,val){localStorage.setItem(key,JSON.stringify(val))}
+    function load(key,def){try{return JSON.parse(localStorage.getItem(key))||def}catch(e){return def}}
 
-    // --- Data setup
+    // ---------- Initialize ----------
     function initData(){
       if(!localStorage.getItem(KEY_PRODUCTS)) save(KEY_PRODUCTS, demoProducts);
+      if(!localStorage.getItem(KEY_USERS)) save(KEY_USERS, []);
       if(!localStorage.getItem(KEY_ORDERS)) save(KEY_ORDERS, []);
       if(!localStorage.getItem(KEY_MONTH_SALES)) save(KEY_MONTH_SALES, {});
     }
     initData();
 
     let dataProducts = load(KEY_PRODUCTS, demoProducts);
-    let orders      = load(KEY_ORDERS, []);
-    let monthSales  = load(KEY_MONTH_SALES, {});
+    let users = load(KEY_USERS, []);
+    let orders = load(KEY_ORDERS, []);
+    let monthSales = load(KEY_MONTH_SALES, {});
+    let cart = load(KEY_CART, {}); // {p1:{qty:2}}
+    let currentUser = load(KEY_CURRENT_USER, null); // {id,name,email,phone,address}
 
-    // --- Product rendering
-    const productsEl   = document.getElementById('products');
-    const searchInput  = document.getElementById('searchInput');
+    // ---------- Auth UX ----------
+    const authModal = document.getElementById('authModal');
+    const profileModal = document.getElementById('profileModal');
+    const openAuthBtn = document.getElementById('openAuthBtn');
+    const openProfile = document.getElementById('openProfile');
+
+    function updateProfileArea(){
+      const el = document.getElementById('profileArea');
+      if(currentUser){
+        el.innerHTML = `<div style="font-weight:700">${currentUser.name}</div><div class="muted">${currentUser.email}</div>`;
+      } else el.textContent = 'Not logged in.';
+    }
+    updateProfileArea();
+
+    openAuthBtn.addEventListener('click',()=>{authModal.style.display='flex'})
+    authModal.addEventListener('click',e=>{ if(e.target===authModal) authModal.style.display='none' })
+    profileModal.addEventListener('click',e=>{ if(e.target===profileModal) profileModal.style.display='none' })
+
+    document.getElementById('doRegister').addEventListener('click',()=>{
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim().toLowerCase();
+      const pass = document.getElementById('regPass').value;
+      const phone = document.getElementById('regPhone').value.trim();
+      const address = document.getElementById('regAddress').value.trim();
+      if(!name||!email||!pass){alert('Fill name, email and password');return}
+      if(users.find(u=>u.email===email)){alert('Email already registered');return}
+      const u = {id:uid(6),name,email,pass,phone,address};
+      users.push(u); save(KEY_USERS,users);
+      currentUser = {id:u.id,name:u.name,email:u.email,phone:u.phone,address:u.address}; save(KEY_CURRENT_USER,currentUser);
+      authModal.style.display='none'; document.getElementById('regName').value=''; document.getElementById('regEmail').value=''; document.getElementById('regPass').value='';
+      updateProfileArea(); alert('Account created and logged in');
+    })
+
+    document.getElementById('doLogin').addEventListener('click',()=>{
+      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const pass = document.getElementById('loginPass').value;
+      const u = users.find(x=>x.email===email && x.pass===pass);
+      if(!u){alert('Invalid credentials');return}
+      currentUser = {id:u.id,name:u.name,email:u.email,phone:u.phone,address:u.address}; save(KEY_CURRENT_USER,currentUser);
+      authModal.style.display='none'; updateProfileArea(); alert('Logged in');
+    })
+
+    // If a currentUser exists in localStorage, user remains logged in automatically.
+    if(currentUser){updateProfileArea()}    
+
+    document.getElementById('openProfile').addEventListener('click',()=>{
+      if(!currentUser){ if(confirm('You are not logged in. Do you want to create an account or login?')){authModal.style.display='flex'} return }
+      // populate
+      document.getElementById('profileName').value = currentUser.name||'';
+      document.getElementById('profileEmail').value = currentUser.email||'';
+      document.getElementById('profilePhone').value = currentUser.phone||'';
+      document.getElementById('profileAddress').value = currentUser.address||'';
+      profileModal.style.display='flex';
+    })
+
+    document.getElementById('saveProfile').addEventListener('click',()=>{
+      if(!currentUser){alert('Not logged in');return}
+      currentUser.name = document.getElementById('profileName').value.trim();
+      currentUser.phone = document.getElementById('profilePhone').value.trim();
+      currentUser.address = document.getElementById('profileAddress').value.trim();
+      // update users array
+      const idx = users.findIndex(u=>u.id===currentUser.id);
+      if(idx>-1){ users[idx].name=currentUser.name; users[idx].phone=currentUser.phone; users[idx].address=currentUser.address; save(KEY_USERS,users) }
+      save(KEY_CURRENT_USER,currentUser); updateProfileArea(); profileModal.style.display='none'; alert('Profile saved');
+    })
+
+    document.getElementById('logoutBtn').addEventListener('click',()=>{
+      if(confirm('Logout from this demo account?')){ localStorage.removeItem(KEY_CURRENT_USER); currentUser=null; updateProfileArea(); profileModal.style.display='none'; alert('Logged out') }
+    })
+
+    // ---------- Product rendering & search ----------
+    const productsEl = document.getElementById('products');
+    const searchInput = document.getElementById('searchInput');
 
     function renderProducts(filterCat='all',q=''){
-      productsEl.innerHTML = '';
-      const qlow = q.trim().toLowerCase();
-      const list = dataProducts.filter(p=>{
-        if(filterCat!=='all' && p.cat!==filterCat) return false;
-        if(qlow && !(p.title.toLowerCase().includes(qlow)||p.desc.toLowerCase().includes(qlow))) return false;
-        return true;
-      });
-      if(!list.length){
-        productsEl.innerHTML = `<div class="muted center" style="padding:45px 0">No products found.</div>`;
-        return;
-      }
+      productsEl.innerHTML=''; const qlow=q.trim().toLowerCase();
+      const list = dataProducts.filter(p=>{ if(filterCat!=='all' && p.cat!==filterCat) return false; if(qlow && !(p.title.toLowerCase().includes(qlow)||p.desc.toLowerCase().includes(qlow))) return false; return true })
       list.forEach(p=>{
-        const el = document.createElement('div'); el.className='product card';
+        const el=document.createElement('div'); el.className='product card';
         el.innerHTML = `
           <div class="image"><img src="${p.img}" alt="${p.title}" style="max-height:200px;object-fit:cover"></div>
           <div class="body">
             <h4>${p.title}</h4>
-            <div class="meta">${p.cat.charAt(0).toUpperCase()+p.cat.slice(1)} • ID ${p.id}</div>
+            <div class="muted">${p.cat} • ID ${p.id}</div>
             <div style="height:8px"></div>
             <div class="price">₱${money(p.price)}</div>
             <div style="height:10px"></div>
             <div style="display:flex;gap:8px">
-              <button class="btn" onclick="openModal('${p.id}')">Quick view</button>
+              <button class="btn" data-id="${p.id}" onclick="openModal('${p.id}')">Quick view</button>
               <button class="chip" onclick="recordQuickSale('${p.id}',1)">Buy 1 (demo)</button>
             </div>
-          </div>
-        `;
+          </div>`;
         productsEl.appendChild(el);
-      });
+      })
     }
     renderProducts();
+    document.querySelectorAll('.chip[data-cat]').forEach(ch=>ch.addEventListener('click',()=>{ renderProducts(ch.dataset.cat, searchInput.value) })));
+    searchInput.addEventListener('input',e=>renderProducts('all',e.target.value));
 
-    document.querySelectorAll('.chip[data-cat]').forEach(ch=>ch.addEventListener('click',e=>{
-      const cat = ch.dataset.cat;
-      renderProducts(cat, searchInput.value);
-    }));
-    searchInput.addEventListener('input',e=>renderProducts('all', e.target.value));
-
-    // --- Modal product view
-    const modalBackdrop  = document.getElementById('modalBackdrop');
-    const modalTitle     = document.getElementById('modalTitle');
-    const modalPrice     = document.getElementById('modalPrice');
-    const modalDesc      = document.getElementById('modalDesc');
-    const modalCategory  = document.getElementById('modalCategory');
-    const modalImage     = document.getElementById('modalImage');
-    const addToCartBtn   = document.getElementById('addToCartBtn');
+    // ---------- Product modal ----------
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalCategory = document.getElementById('modalCategory');
+    const modalImage = document.getElementById('modalImage');
+    const addToCartBtn = document.getElementById('addToCartBtn');
     let currentModalProduct = null;
-
-    window.openModal = function(id){
-      const p = dataProducts.find(x=>x.id===id); if(!p) return;
-      currentModalProduct = p;
-      modalTitle.textContent = p.title;
-      modalPrice.textContent = '₱'+money(p.price);
-      modalDesc.textContent = p.desc;
-      modalCategory.textContent = p.cat.charAt(0).toUpperCase()+p.cat.slice(1);
-      modalImage.innerHTML   = `<img src="${p.img}" alt="${p.title}" style="max-height:320px;object-fit:cover">`;
-      modalBackdrop.style.display = 'flex';
-      document.getElementById('qty').value = 1;
-    }
+    window.openModal = function(id){ const p = dataProducts.find(x=>x.id===id); if(!p) return; currentModalProduct=p; modalTitle.textContent=p.title; modalPrice.textContent='₱'+money(p.price); modalDesc.textContent=p.desc; modalCategory.textContent=p.cat; modalImage.innerHTML=`<img src="${p.img}" alt="${p.title}" style="max-height:320px;object-fit:cover">`; modalBackdrop.style.display='flex' }
     modalBackdrop.addEventListener('click',e=>{ if(e.target===modalBackdrop) modalBackdrop.style.display='none' })
 
-    addToCartBtn.addEventListener('click',()=>{
-      const qty = Number(document.getElementById('qty').value) || 1;
-      addCart(currentModalProduct.id, qty);
-      modalBackdrop.style.display='none';
-    });
+    addToCartBtn.addEventListener('click',()=>{ const qty = Number(document.getElementById('qty').value)||1; addCart(currentModalProduct.id,qty); modalBackdrop.style.display='none' })
 
-    // --- Cart logic
-    let cart = load('fq_cart_demo_v1', {});
-    const cartCount  = document.getElementById('cartCount');
+    // ---------- Cart logic ----------
+    const cartCount = document.getElementById('cartCount');
     const cartDrawer = document.getElementById('cartDrawer');
-    const cartItems  = document.getElementById('cartItems');
+    const cartItems = document.getElementById('cartItems');
     const cartTotalEl = document.getElementById('cartTotal');
     const cartSummary = document.getElementById('cartSummary');
 
-    function saveCart(){ localStorage.setItem('fq_cart_demo_v1', JSON.stringify(cart)); updateCartUI(); }
-    function updateCartUI(){
-      const keys = Object.keys(cart);
-      let total = 0, count = 0;
-      cartItems.innerHTML = '';
-      keys.forEach(id=>{
-        const p = dataProducts.find(x=>x.id===id);
-        if(!p) return;
-        const qty = cart[id].qty;
-        const el = document.createElement('div'); el.className='cart-item';
-        el.innerHTML = `
-          <div style="width:56px;height:56px;overflow:hidden;border-radius:10px"><img src="${p.img}" alt="" style="width:100%;height:100%;object-fit:cover"/></div>
-          <div style="flex:1"><div style="font-weight:600">${p.title}</div><div class="muted">₱${money(p.price)} • x ${qty}</div></div>
-          <div><button class="chip" onclick="changeQty('${id}',-1)">-</button><button class="chip" onclick="changeQty('${id}',1)">+</button></div>`;
-        cartItems.appendChild(el);
-        total += p.price * qty; count += qty;
-      });
-      cartCount.textContent = count;
-      cartTotalEl.textContent = money(total);
-      cartSummary.innerHTML = keys.length ? `${count} items • ₱${money(total)}` : 'No items yet.';
-    }
+    function saveCart(){ save(KEY_CART,cart); updateCartUI(); }
+    function updateCartUI(){ const keys=Object.keys(cart); let total=0,count=0; cartItems.innerHTML=''; keys.forEach(id=>{ const p=dataProducts.find(x=>x.id===id); const qty=cart[id].qty; const el=document.createElement('div'); el.className='cart-item'; el.innerHTML=`<div style="width:56px;height:56px;overflow:hidden;border-radius:10px"><img src="${p.img}" style="width:100%;height:100%;object-fit:cover"/></div><div style="flex:1"><div style="font-weight:600">${p.title}</div><div class="muted">₱${money(p.price)} • x ${qty}</div></div><div><button class="chip" onclick="changeQty('${id}',-1)">-</button><button class="chip" onclick="changeQty('${id}',1)">+</button></div>`; cartItems.appendChild(el); total += p.price*qty; count += qty })
+      cartCount.textContent = count; cartTotalEl.textContent = money(total); cartSummary.innerHTML = keys.length ? `${count} items • ₱${money(total)}` : 'No items yet.' }
 
-    function changeQty(id,delta){
-      if(!cart[id]) return;
-      cart[id].qty += delta;
-      if(cart[id].qty<=0) delete cart[id];
-      saveCart();
-    }
-    window.changeQty = changeQty;
+    function changeQty(id,delta){ if(!cart[id]) return; cart[id].qty += delta; if(cart[id].qty<=0) delete cart[id]; saveCart(); }
 
-    function addCart(id,qty=1){
-      cart[id] = cart[id] || {qty:0};
-      cart[id].qty += qty;
-      saveCart();
-      alert('Added to cart');
-    }
+    window.openCart = function(){ cartDrawer.style.display = cartDrawer.style.display === 'none' ? 'block' : 'none' }
+    document.getElementById('openCartBtn').addEventListener('click',openCart);
 
-    window.openCart = function(){
-      cartDrawer.style.display = cartDrawer.style.display === 'none' ? 'block' : 'none';
-      updateCartUI();
-    }
-    document.getElementById('openCartBtn').addEventListener('click', openCart);
+    function addCart(id,qty=1){ cart[id]=cart[id]||{qty:0}; cart[id].qty += qty; saveCart(); alert('Added to cart') }
 
+    // quick buy (records sale without user info) — still records an order with status 'paid' and userId if logged in
+    window.recordQuickSale = function(id,q){ const today=new Date(); const monthKey = today.toISOString().slice(0,7); monthSales[monthKey]=monthSales[monthKey]||{}; monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + q; const order = {id:uid(6),productId:id,qty:q,month:monthKey,status:'paid',userId: currentUser ? currentUser.id : null, created:new Date().toISOString(), address: currentUser ? currentUser.address : null, phone: currentUser ? currentUser.phone : null}; orders.push(order); save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales); alert('Demo purchase recorded for ' + monthKey); renderUserOrders(); }
+
+    // Buy now -> converts cart to order (status: pending) and requires shipping info from profile (one-time save)
     document.getElementById('buyNow').addEventListener('click',()=>{
-      const keys = Object.keys(cart); if(!keys.length){alert('Cart empty'); return;}
+      const keys = Object.keys(cart); if(!keys.length){alert('Cart empty');return}
+      // require address & phone
+      if(!currentUser){ if(!confirm('You are not logged in. Creating an account is recommended to save your address. Proceed as guest?')) return }
+      const addr = currentUser ? currentUser.address : prompt('Enter shipping address:');
+      const phone = currentUser ? currentUser.phone : prompt('Enter phone number:');
+      if(!addr||!phone){alert('Address and phone required');return}
       const today = new Date(); const monthKey = today.toISOString().slice(0,7);
-      keys.forEach(id=>{
-        monthSales[monthKey] = monthSales[monthKey] || {};
-        monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + cart[id].qty;
-        orders.push({id:uid(6),productId:id,qty:cart[id].qty,month:monthKey,created:new Date().toISOString()});
-      });
+      keys.forEach(id=>{ monthSales[monthKey] = monthSales[monthKey] || {}; monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + cart[id].qty; const order = {id:uid(6),productId:id,qty:cart[id].qty,month:monthKey,status:'pending',userId: currentUser ? currentUser.id : null, created:new Date().toISOString(), address: addr, phone: phone}; orders.push(order); });
       save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
-      cart = {}; saveCart(); cartDrawer.style.display='none';
-      alert('Thank you! Your demo order placed for '+monthKey);
-    });
+      // if currentUser had no address but provided one, persist it
+      if(currentUser && (!currentUser.address || !currentUser.phone)){
+        currentUser.address = addr; currentUser.phone = phone; const idx = users.findIndex(u=>u.id===currentUser.id); if(idx>-1){ users[idx].address = addr; users[idx].phone = phone; save(KEY_USERS,users)} save(KEY_CURRENT_USER,currentUser); updateProfileArea();
+      }
+      cart = {}; saveCart(); cartDrawer.style.display='none'; alert('Order placed (demo). Status: pending. Track in Order History'); renderAdminOrders(); renderUserOrders();
+    })
 
-    document.getElementById('checkoutBtn').addEventListener('click',()=>{
-      openCart(); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})
-    });
-
+    document.getElementById('checkoutBtn').addEventListener('click',()=>{ openCart(); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}) })
     updateCartUI();
 
-    // --- Quick buy for demo product card
-    window.recordQuickSale = function(id,q){
-      const today = new Date();
-      const monthKey = today.toISOString().slice(0,7);
-      monthSales[monthKey] = monthSales[monthKey] || {};
-      monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + q;
-      orders.push({id:uid(6),productId:id,qty:q,month:monthKey,created:new Date().toISOString()});
-      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
-      alert('Demo purchase recorded for '+monthKey);
-    }
-
-    // --- Admin Modal for recording sales
-    const adminModal   = document.getElementById('adminModal');
-    const openAdmin    = document.getElementById('openAdmin');
+    // ---------- Admin functions ----------
+    const adminModal = document.getElementById('adminModal');
+    const openAdmin = document.getElementById('openAdmin');
     const adminProduct = document.getElementById('adminProduct');
-    const recordSaleBtn= document.getElementById('recordSale');
-    const adminOrders  = document.getElementById('adminOrders');
-    function refreshAdminProducts(){
-      adminProduct.innerHTML = '';
-      dataProducts.forEach(p=>{
-        const o = document.createElement('option');
-        o.value=p.id; o.textContent=`${p.title} (₱${money(p.price)})`;
-        adminProduct.appendChild(o);
-      });
-    }
+    const recordSaleBtn = document.getElementById('recordSale');
+    const adminOrdersEl = document.getElementById('adminOrders');
+    const adminOrderList = document.getElementById('adminOrderList');
+    const adminFilter = document.getElementById('adminFilter');
+
+    function refreshAdminProducts(){ adminProduct.innerHTML=''; dataProducts.forEach(p=>{ const o=document.createElement('option'); o.value=p.id; o.textContent=`${p.title} (₱${money(p.price)})`; adminProduct.appendChild(o) }) }
     refreshAdminProducts();
 
-    openAdmin.addEventListener('click',()=>{ adminModal.style.display='flex'; renderAdminOrders(); document.getElementById('adminMonth').value = new Date().toISOString().slice(0,7) });
+    openAdmin.addEventListener('click',()=>{ adminModal.style.display='flex'; renderAdminOrders(); document.getElementById('adminMonth').value = new Date().toISOString().slice(0,7) })
     adminModal.addEventListener('click',e=>{ if(e.target===adminModal) adminModal.style.display='none' })
 
     recordSaleBtn.addEventListener('click',()=>{
-      const id    = adminProduct.value;
-      const qty   = Number(document.getElementById('adminQty').value)||1;
-      const month = document.getElementById('adminMonth').value;
-      if(!month){alert('Pick month');return}
-      monthSales[month] = monthSales[month] || {};
-      monthSales[month][id] = (monthSales[month][id]||0) + qty;
-      orders.push({id:uid(6),productId:id,qty:qty,month:month,created:new Date().toISOString()});
-      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
-      renderAdminOrders(); alert('Recorded');
-    });
+      const id = adminProduct.value; const qty = Number(document.getElementById('adminQty').value)||1; const month = document.getElementById('adminMonth').value; if(!month){alert('Pick month');return}
+      monthSales[month] = monthSales[month] || {}; monthSales[month][id] = (monthSales[month][id]||0) + qty; orders.push({id:uid(6),productId:id,qty:qty,month:month,status:'paid',userId:null,created:new Date().toISOString(),address:null,phone:null}); save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales); renderAdminOrders(); alert('Recorded');
+    })
 
-    function renderAdminOrders(){
-      adminOrders.innerHTML = '';
-      const recent = orders.slice(-10).reverse();
-      if(!recent.length){
-        adminOrders.innerHTML = `<div class="muted">No orders yet.</div>`;
-        return;
-      }
-      recent.forEach(o=>{
-        const p = dataProducts.find(x=>x.id===o.productId)||{title:o.productId};
-        const d = document.createElement('div'); d.className='muted'; d.style.padding='6px 0'; d.textContent = `${o.created.split('T')[0]} — ${p.title} x ${o.qty} (${o.month})`;
-        adminOrders.appendChild(d);
-      });
-    }
-    document.getElementById('resetData').addEventListener('click',()=>{
-      if(confirm('Reset demo data? This clears orders and sales counts, but not products.')){
-        orders=[]; monthSales={}; save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales); renderAdminOrders(); alert('Reset');
-      }
-    });
-    document.getElementById('exportData').addEventListener('click',()=>{
-      const blob = new Blob([JSON.stringify({products:dataProducts,orders:orders,monthSales:monthSales},null,2)],{type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href=url; a.download='five-queens-data.json'; a.click(); URL.revokeObjectURL(url);
-    });
+    function renderAdminOrders(){ adminOrdersEl.innerHTML=''; const recent = orders.slice(-10).reverse(); recent.forEach(o=>{ const p = dataProducts.find(x=>x.id===o.productId)||{title:o.productId}; const d = document.createElement('div'); d.className='muted'; d.style.padding='6px 0'; d.textContent = `${o.created.split('T')[0]} — ${p.title} x ${o.qty} — ${o.status}`; adminOrdersEl.appendChild(d) }); renderAdminOrderList(); }
 
-    // --- Monthly Best Seller Modal/report
-    const reportModal   = document.getElementById('reportModal');
-    const openReport    = document.getElementById('openReport');
-    const reportMonth   = document.getElementById('reportMonth');
+    function renderAdminOrderList(){ adminOrderList.innerHTML=''; const f = adminFilter.value; const list = orders.filter(o=> f==='all' ? true : o.status===f ); list.slice().reverse().forEach(o=>{ const p = dataProducts.find(x=>x.id===o.productId)||{title:o.productId}; const div = document.createElement('div'); div.style.padding='8px;borderBottom='; div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${p.title}</strong><div class="muted">Order ${o.id} • ${o.qty} pcs • ${o.created.split('T')[0]}</div><div class="muted">${o.address?o.address:'No address'} • ${o.phone||''}</div></div><div style="display:flex;flex-direction:column;gap:6px"><select data-order="${o.id}"><option value="pending">pending</option><option value="paid">paid</option><option value="delivered">delivered</option></select><button class="chip" data-id="${o.id}">View</button></div></div>`; adminOrderList.appendChild(div); const sel = div.querySelector('select'); sel.value = o.status; sel.addEventListener('change',e=>{ updateOrderStatus(o.id, e.target.value) }); div.querySelector('button').addEventListener('click',()=>{ alert(JSON.stringify(o,null,2)) }) }) }
+
+    adminFilter.addEventListener('change',renderAdminOrderList);
+
+    function updateOrderStatus(orderId,status){ const idx = orders.findIndex(o=>o.id===orderId); if(idx===-1) return; orders[idx].status = status; save(KEY_ORDERS,orders); renderAdminOrders(); renderUserOrders(); alert('Order status updated') }
+
+    document.getElementById('resetData').addEventListener('click',()=>{ if(confirm('Reset demo orders and sales?')){ orders=[]; monthSales={}; save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales); renderAdminOrders(); renderUserOrders(); alert('Reset') } })
+
+    document.getElementById('exportData').addEventListener('click',()=>{ const blob = new Blob([JSON.stringify({products:dataProducts,users:users,orders:orders,monthSales:monthSales},null,2)],{type:'application/json'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='five-queens-data.json'; a.click(); URL.revokeObjectURL(url); })
+
+    // ---------- Reports (best seller) ----------
+    const reportModal = document.getElementById('reportModal');
+    const reportMonth = document.getElementById('reportMonth');
     const reportContent = document.getElementById('reportContent');
 
-    openReport.addEventListener('click',()=>{ reportModal.style.display='flex'; reportMonth.value = new Date().toISOString().slice(0,7); renderReport(); });
-    reportModal.addEventListener('click',e=>{ if(e.target===reportModal) reportModal.style.display='none' });
+    document.getElementById('openReport').addEventListener('click',()=>{ reportModal.style.display='flex'; reportMonth.value = new Date().toISOString().slice(0,7); renderReport() })
+    reportModal.addEventListener('click',e=>{ if(e.target===reportModal) reportModal.style.display='none' })
     reportMonth.addEventListener('change',renderReport);
 
-    function renderReport(){
-      const m = reportMonth.value || new Date().toISOString().slice(0,7);
-      const sales = monthSales[m] || {};
-      if(!Object.keys(sales||{}).length){
-        reportContent.innerHTML = `<div class="muted">No sales recorded for ${m}.</div>`; return;
-      }
-      // find top products
-      const arr = Object.entries(sales).map(([pid,c])=>({pid,count:c}));
-      arr.sort((a,b)=>b.count - a.count);
-      const top = arr[0];
-      const ptop = dataProducts.find(x=>x.id===top.pid);
-      let html = `<div style="display:flex;gap:15px;align-items:center">
-        <div style="width:100px;height:100px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px #ccc"><img src="${ptop.img}" style="width:100%;height:100%;object-fit:cover"></div>
-        <div>
-          <div style="font-size:20px;font-weight:700">${ptop.title}</div>
-          <div class="meta">Best seller: <span style="font-weight:600">${top.count} pcs</span></div>
-        </div>
-      </div>`;
-      // Top 5 sellers
-      html += `<div style="margin-top:14px"><h4>Top sellers:</h4><ol style="margin:0;padding-left:22px;">` +
-        arr.slice(0,5).map(a=>{
-          const p = dataProducts.find(x=>x.id===a.pid);
-          return `<li>${p.title} — ${a.count} pcs</li>`;
-        }).join('') +
-        `</ol></div>`;
-      reportContent.innerHTML = html;
-    }
+    function renderReport(){ const m = reportMonth.value || new Date().toISOString().slice(0,7); const sales = monthSales[m] || {}; if(!Object.keys(sales||{}).length){ reportContent.innerHTML = `<div class="muted">No sales recorded for ${m}.</div>`; return } const arr = Object.entries(sales).map(([pid,c])=>({pid,count:c})); arr.sort((a,b)=>b.count-a.count); const top = arr[0]; const ptop = dataProducts.find(x=>x.id===top.pid); let html = `<div style="display:flex;gap:12px;align-items:center"><div style="width:120px;height:120px;border-radius:12px;overflow:hidden"><img src="${ptop.img}" style="width:100%;height:100%;object-fit:cover"/></div><div><h3>${ptop.title}</h3><div class="muted">Sold ${top.count} pcs in ${m}</div><div style="height:8px"></div><div class="muted">Category: ${ptop.cat}</div></div></div>`; html += `<div style="margin-top:12px"><h4>Top sellers</h4><ol>` + arr.slice(0,5).map(a=>{const p=dataProducts.find(x=>x.id===a.pid); return `<li>${p.title} — ${a.count} pcs`}).join('') + `</ol></div>`; reportContent.innerHTML = html }
 
-    // --- Data reload (refresh UI)
-    function loadEverything(){
-      dataProducts = load(KEY_PRODUCTS, demoProducts);
-      orders      = load(KEY_ORDERS, []);
-      monthSales  = load(KEY_MONTH_SALES, {});
-      refreshAdminProducts(); renderProducts(); updateCartUI();
-    }
+    // ---------- User order history & tracking ----------
+    function renderUserOrders(){ const section = document.getElementById('userOrdersSection'); if(!currentUser){ section.innerHTML = `<div class="card"><h4>Order History</h4><div class="muted">Login to view your orders. Orders placed as guest will not be tied to an account.</div></div>`; return } const my = orders.filter(o=>o.userId===currentUser.id); let html = `<div class="card"><h4>Order History (${my.length})</h4>`; if(!my.length){ html += `<div class="muted">No orders yet.</div>` } else { html += `<div style="display:flex;flex-direction:column;gap:8px">`+ my.slice().reverse().map(o=>{ const p = dataProducts.find(x=>x.id===o.productId) || {title:o.productId}; return `<div style="padding:10px;border:1px solid #f3e3e8;border-radius:10px;display:flex;justify-content:space-between;align-items:center"><div><strong>${p.title}</strong><div class="muted">Order ${o.id} • ${o.qty} pcs • ${o.created.split('T')[0]}</div><div class="muted">Status: ${o.status}</div><div class="muted">Address: ${o.address||'—'}</div></div><div><button class="chip" onclick="trackOrder('${o.id}')">Track</button></div></div>` }).join('') + `</div>` } html += `</div>`; section.innerHTML = html }
+
+    window.trackOrder = function(orderId){ const o = orders.find(x=>x.id===orderId); if(!o){alert('Order not found')} else { alert(`Order ${o.id}
+Product: ${ (dataProducts.find(p=>p.id===o.productId)||{title:o.productId}).title }
+Qty: ${o.qty}
+Status: ${o.status}
+Placed: ${o.created}
+Address: ${o.address||'—'}`) } }
+
+    renderUserOrders();
+
+    // ---------- Utilities ----------
+    function loadEverything(){ dataProducts = load(KEY_PRODUCTS, demoProducts); users = load(KEY_USERS,[]); orders = load(KEY_ORDERS,[]); monthSales = load(KEY_MONTH_SALES,{}); cart = load(KEY_CART,{}); currentUser = load(KEY_CURRENT_USER,null); refreshAdminProducts(); renderProducts(); updateCartUI(); updateProfileArea(); renderAdminOrders(); renderUserOrders(); }
     loadEverything();
 
-    // Filter products (fix demo data)
-    dataProducts = dataProducts.filter(p=>p && p.id);
-    save(KEY_PRODUCTS, dataProducts);
+    // ---------- Tip for first-time ----------
+    if(!localStorage.getItem('fq_seen_tip')){ localStorage.setItem('fq_seen_tip','1'); setTimeout(()=>alert('Tip: Register an account to save your address and track orders. Admin → Record Sales to simulate orders.'),600) }
 
-    // --- Tip/first open
-    if(!localStorage.getItem('fq_seen_tip')){
-      localStorage.setItem('fq_seen_tip','1');
-      setTimeout(()=>alert('Tip: Use Admin → Record Sales to simulate orders per month. Then use Monthly Best to view that month\'s best seller.'),900);
-    }
+    // ---------- Expose some functions to global for inline handlers ----------
+    window.renderUserOrders = renderUserOrders;
+    window.renderAdminOrders = renderAdminOrders;
+    window.renderAdminOrderList = renderAdminOrderList;
+
   </script>
 </body>
 </html>
