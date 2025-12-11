@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Five Queens Jewelry — Shop</title>
+  <title>Five Queens Jewelry</title>
   <meta name="description" content="Five Queens Jewelry — demo e-commerce jewelry store with sales tracking and monthly best-seller report." />
   <!-- GOOGLE FONTS FOR A MODERN LOOK -->
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
@@ -91,15 +91,24 @@
   <header>
     <div class="nav container">
       <div class="brand">
-        <div class="logo">FQ</div>
+        
+        <!-- LOGO IMAGE HERE -->
+        <div class="logo" style="background:none; padding:0;">
+          <img src="logo.png" alt="Five Queens Logo" 
+            style="width:44px; height:44px; border-radius:12px; object-fit:cover;">
+        </div>
+        
         <div>
-          <div style="font-size:16px; font-weight:700;">Five Queens Jewelry</div>
-          <div style="font-size:12px; color:var(--muted)">Fine pieces • Metro Manila</div>
+          <div style="font-size:15px">Five Queens Jewelry</div>
+          <div style="font-size:12px;color:var(--muted)">Shine With the Elegance of a Queen</div>
         </div>
       </div>
+      
       <div class="search">
-        <input id="searchInput" placeholder="Search jewelry, e.g. necklace, ring..." />
+        <input id="searchInput" placeholder=" " />
       </div>
+    </div>
+
       <div class="icons">
         <div class="icon-btn" id="openAdmin">Admin</div>
         <div class="icon-btn" id="openReport">Monthly Best</div>
