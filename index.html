@@ -449,27 +449,32 @@ function addToCart(p){
     const productsEl = document.getElementById('products');
     const searchInput = document.getElementById('searchInput');
 
-    function renderProducts(filterCat='all',q=''){
-      productsEl.innerHTML=''; const qlow=q.trim().toLowerCase();
-      const list = dataProducts.filter(p=>{ if(filterCat!=='all' && p.cat!==filterCat) return false; if(qlow && !(p.title.toLowerCase().includes(qlow)||p.desc.toLowerCase().includes(qlow))) return false; return true })
-      list.forEach(p=>{
-        const el=document.createElement('div'); el.className='product card';
-        el.innerHTML = `
-          <div class="image"><img src="${p.img}" alt="${p.title}" style="max-height:200px;object-fit:cover"></div>
-          <div class="body">
-            <h4>${p.title}</h4>
-            <div class="muted">${p.cat} • ID ${p.id}</div>
-            <div style="height:8px"></div>
-            <div class="price">₱${money(p.price)}</div>
-            <div style="height:10px"></div>
-            <div style="display:flex;gap:8px">
-              <button class="btn" data-id="${p.id}" onclick="openModal('${p.id}')">Quick view</button>
-              <button class="chip" onclick="recordQuickSale('${p.id}',1)">Buy 1 (demo)</button>
-            </div>
-          </div>`;
-        productsEl.appendChild(el);
-      })
-    }
+    function renderProducts(filterCat = 'all', q = '') {
+      productsEl.innerHTML = '';
+      const qlow = q.trim().toLowerCase();
+      
+      const list = dataProducts.filter(p => {
+        if (filterCat !== 'all' && p.cat !== filterCat) return false;
+        if (qlow && !(p.title.toLowerCase().includes(qlow) || p.desc.toLowerCase().includes(qlow))) return false;
+        return true;
+      });
+      
+      list.forEach(p => {
+        let card = document.createElement('div');
+        card.className = "product";
+        card.innerHTML = `
+        <div class="image"><img src="${p.img}" style="max-height:200px"></div>
+        <div class="body">
+          <div><strong>${p.title}</strong></div>
+          <div class="price">₱${money(p.price)}</div>
+          <button class="btn" onclick="openProduct('${p.id}')">View</button>
+          <button class="btn" onclick="addToCartDirect('${p.id}')">Add to Cart</button>
+        </div>
+    `;
+    productsEl.appendChild(card);
+  });
+}
+
     renderProducts();
     document.querySelectorAll('.chip[data-cat]').forEach(ch=>ch.addEventListener('click',()=>{ renderProducts(ch.dataset.cat, searchInput.value) })));
     searchInput.addEventListener('input',e=>renderProducts('all',e.target.value));
