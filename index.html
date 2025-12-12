@@ -786,223 +786,223 @@
     }
 
 
-    <script>
-// --- Continue modal close ---
-      modalBackdrop.style.display='none';
-});
 
 // ---------- Cart Logic ----------
-function addCart(id, qty=1){
-  cart[id] = (cart[id]||0) + qty;
-  save(KEY_CART, cart);
-  updateCartUI();
-}
+    function addCart(id, qty=1){
+      cart[id] = (cart[id]||0) + qty;
+      save(KEY_CART, cart);
+      updateCartUI();
+    }
 
-function removeCart(id){
-  delete cart[id];
-  save(KEY_CART, cart);
-  updateCartUI();
-}
+    function removeCart(id){
+      delete cart[id];
+      save(KEY_CART, cart);
+      updateCartUI();
+    }
 
-function updateCartUI(){
-  const entries = Object.entries(cart);
-  cartCount.textContent = entries.length;
-  cartItems.innerHTML = '';
-  let total = 0;
+    function updateCartUI(){
+      const entries = Object.entries(cart);
+      cartCount.textContent = entries.length;
+      cartItems.innerHTML = '';
+      let total = 0;
 
-  entries.forEach(([id,qty])=>{
-    const p = dataProducts.find(x=>x.id===id);
-    if(!p) return;
-    total += p.price * qty;
+      entries.forEach(([id,qty])=>{
+        const p = dataProducts.find(x=>x.id===id);
+        if(!p) return;
+        total += p.price * qty;
 
-    cartItems.innerHTML += `
-      <div class="cart-item">
+        cartItems.innerHTML += `
+        <div class="cart-item">
         <div style="flex:1">${p.title} × ${qty}</div>
         <div>₱${money(p.price * qty)}</div>
         <button class="chip btn-sm" onclick="removeCart('${id}')">X</button>
-      </div>
-    `;
-  });
+        </div>
+        `;
+      });
 
-  cartTotalEl.textContent = money(total);
+      
+      cartTotalEl.textContent = money(total);
+      
+      // summary on left sidebar
+      if(entries.length){
+        cartSummary.innerHTML =
+          entries.map(([id,qty])=>{
+            const p=dataProducts.find(x=>x.id===id);
+            return `${p.title} × ${qty}`;
+          }).join("<br>");
+      } else {
+        cartSummary.textContent = "No items yet.";
+      }
+    }
+    
+    updateCartUI();
+    
+    document.getElementById('openCartBtn').onclick = ()=>{
+      cartDrawer.style.display = (cartDrawer.style.display==='block')?'none':'block';
+    };
+    buyNowBtn.onclick = ()=> checkoutBtn.click();
+    checkoutBtn.onclick = ()=> openCheckout();
 
-  // summary on left sidebar
-  if(entries.length){
-    cartSummary.innerHTML =
-      entries.map(([id,qty])=>{
-        const p=dataProducts.find(x=>x.id===id);
-        return `${p.title} × ${qty}`;
-      }).join("<br>");
-  } else {
-    cartSummary.textContent = "No items yet.";
-  }
-}
-updateCartUI();
+    
+    // ---------- Checkout Modal ----------
+    function openCheckout(){
+      const entries = Object.entries(cart);
+      if(entries.length===0){ alert("Your cart is empty."); return; }
 
-document.getElementById('openCartBtn').onclick = ()=>{
-  cartDrawer.style.display = (cartDrawer.style.display==='block')?'none':'block';
-};
-buyNowBtn.onclick = ()=> checkoutBtn.click();
-checkoutBtn.onclick = ()=> openCheckout();
 
-// ---------- Checkout Modal ----------
-function openCheckout(){
-  const entries = Object.entries(cart);
-  if(entries.length===0){ alert("Your cart is empty."); return; }
+      checkoutItems.innerHTML = '';
+      let subtotal = 0;
 
-  checkoutItems.innerHTML = '';
-  let subtotal = 0;
+      entries.forEach(([id,qty])=>{
+        const p = dataProducts.find(x=>x.id===id);
+        subtotal += p.price * qty;
 
-  entries.forEach(([id,qty])=>{
-    const p = dataProducts.find(x=>x.id===id);
-    subtotal += p.price * qty;
-
-    checkoutItems.innerHTML += `
-      <div class="order-row">
+        checkoutItems.innerHTML += `
+        <div class="order-row">
         <div>${p.title} × ${qty}</div>
         <div>₱${money(p.price * qty)}</div>
-      </div>
-    `;
-  });
+        </div>
+        `;
+      });
 
-  checkoutSubtotal.textContent = money(subtotal);
-  checkoutShipping.textContent = checkoutShippingFee;
+      checkoutSubtotal.textContent = money(subtotal);
+      checkoutShipping.textContent = checkoutShippingFee;
 
-  // clear form
-  shipName.value = "";
-  shipPhone.value = "";
-  shipAddress.value = "";
-  payRef.value = "";
-  receiptFile.value = "";
-  receiptPreview.style.display = "none";
-  checkoutMsg.textContent = "";
+      // clear form
+      shipName.value = "";
+      shipPhone.value = "";
+      shipAddress.value = "";
+      payRef.value = "";
+      receiptFile.value = "";
+      receiptPreview.style.display = "none";
+      checkoutMsg.textContent = "";
 
-  checkoutModal.style.display = "flex";
-}
-
-// Close checkout
-cancelCheckout.onclick = ()=> checkoutModal.style.display = "none";
-checkoutModal.addEventListener('click',e=>{
-  if(e.target===checkoutModal) checkoutModal.style.display='none';
-});
-
-// Show receipt fields only if GCash / PayMaya
-document.querySelectorAll("input[name='pay']").forEach(r=>{
-  r.addEventListener('change',()=>{
-    if(r.value==="cod"){
-      receiptFields.style.display="none";
-    } else {
-      receiptFields.style.display="block";
+      checkoutModal.style.display = "flex";
     }
-  });
-});
 
-// Receipt preview
-receiptFile.onchange = ()=>{
-  const file = receiptFile.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ()=> {
-    receiptPreview.src = reader.result;
-    receiptPreview.style.display = "block";
-  };
-  reader.readAsDataURL(file);
-};
+    // Close checkout
+    cancelCheckout.onclick = ()=> checkoutModal.style.display = "none";
+    checkoutModal.addEventListener('click',e=>{
+      if(e.target===checkoutModal) checkoutModal.style.display='none';
+    });
 
-// ---------- Submit Checkout ----------
-submitCheckout.onclick = ()=>{
-  const name = shipName.value.trim();
-  const phone = shipPhone.value.trim();
-  const address = shipAddress.value.trim();
-  const pay = document.querySelector("input[name='pay']:checked").value;
+    // Show receipt fields only if GCash / PayMaya
+    document.querySelectorAll("input[name='pay']").forEach(r=>{
+      r.addEventListener('change',()=>{
+        if(r.value==="cod"){
+          receiptFields.style.display="none";
+        } else {
+          receiptFields.style.display="block";
+        }
+      });
+    });
 
-  if(!name || !phone || !address){
-    checkoutMsg.textContent = "Please complete shipping information.";
-    return;
-  }
+    // Receipt preview
+    receiptFile.onchange = ()=>{
+      const file = receiptFile.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=> {
+        receiptPreview.src = reader.result;
+        receiptPreview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    };
 
-  let ref = "";
-  let receiptImg = "";
+    // ---------- Submit Checkout ----------
+    submitCheckout.onclick = ()=>{
+      const name = shipName.value.trim();
+      const phone = shipPhone.value.trim();
+      const address = shipAddress.value.trim();
+      const pay = document.querySelector("input[name='pay']:checked").value;
 
-  if(pay !== "cod"){
-    ref = payRef.value.trim();
-    if(!ref){
-      checkoutMsg.textContent = "Please enter payment reference number.";
-      return;
-    }
-    if(receiptPreview.src){
-      receiptImg = receiptPreview.src;
-    }
-  }
+      if(!name || !phone || !address){
+        checkoutMsg.textContent = "Please complete shipping information.";
+        return;
+      }
 
-  const entries = Object.entries(cart);
-  let subtotal = entries.reduce((t,[id,qty])=>{
-    const p = dataProducts.find(x=>x.id===id);
-    return t + p.price*qty;
-  },0);
-  const shipping = checkoutShippingFee;
-  const total = subtotal + shipping;
+      let ref = "";
+      let receiptImg = "";
 
-  // Save order
-  const order = {
-    id: uid(),
-    items: entries.map(([id,qty])=>{
-      const p = dataProducts.find(x=>x.id===id);
-      return {id, title:p.title, qty, price:p.price};
-    }),
-    subtotal, shipping, total,
-    name, phone, address,
-    payment: pay,
-    ref,
-    receiptImg,
-    status: "pending",
-    date: new Date().toISOString()
-  };
+      if(pay !== "cod"){
+        ref = payRef.value.trim();
+        if(!ref){
+          checkoutMsg.textContent = "Please enter payment reference number.";
+          return;
+        }
+        if(receiptPreview.src){
+          receiptImg = receiptPreview.src;
+        }
+      }
 
-  orders.push(order);
-  save(KEY_ORDERS, orders);
+      const entries = Object.entries(cart);
+      let subtotal = entries.reduce((t,[id,qty])=>{
+        const p = dataProducts.find(x=>x.id===id);
+        return t + p.price*qty;
+      },0);
+      const shipping = checkoutShippingFee;
+      const total = subtotal + shipping;
 
-  // clear cart
-  cart = {};
-  save(KEY_CART, cart);
-  updateCartUI();
+      // Save order
+      const order = {
+        id: uid(),
+        items: entries.map(([id,qty])=>{
+          const p = dataProducts.find(x=>x.id===id);
+          return {id, title:p.title, qty, price:p.price};
+        }),
+        subtotal, shipping, total,
+        name, phone, address,
+        payment: pay,
+        ref,
+        receiptImg,
+        status: "pending",
+        date: new Date().toISOString()
+      };
 
-  checkoutMsg.textContent = "Order placed successfully!";
-  setTimeout(()=> checkoutModal.style.display='none', 900);
-};
+      orders.push(order);
+      save(KEY_ORDERS, orders);
 
-// ---------- Admin Panel ----------
-openAdmin.onclick = ()=> renderAdmin();
-closeAdmin.onclick = ()=> adminModal.style.display='none';
-refreshAdmin.onclick = ()=> renderAdmin();
-clearOrdersBtn.onclick = ()=>{
-  if(confirm("Clear all orders?")){
-    orders = [];
-    save(KEY_ORDERS, orders);
-    renderAdmin();
-  }
-};
+      // clear cart
+      cart = {};
+      save(KEY_CART, cart);
+      updateCartUI();
 
-function renderAdmin(){
-  adminOrdersList.innerHTML = "";
-  if(!orders.length){
-    adminOrdersList.innerHTML = `<div class="muted">No orders yet.</div>`;
-  }
+      checkoutMsg.textContent = "Order placed successfully!";
+      setTimeout(()=> checkoutModal.style.display='none', 900);
+    };
 
-  orders.forEach(o=>{
-    adminOrdersList.innerHTML += `
-      <div class="card" style="margin-bottom:12px">
+    // ---------- Admin Panel ----------
+    openAdmin.onclick = ()=> renderAdmin();
+    closeAdmin.onclick = ()=> adminModal.style.display='none';
+    refreshAdmin.onclick = ()=> renderAdmin();
+    clearOrdersBtn.onclick = ()=>{
+      if(confirm("Clear all orders?")){
+        orders = [];
+        save(KEY_ORDERS, orders);
+        renderAdmin();
+      }
+    };
+
+    function renderAdmin(){
+      adminOrdersList.innerHTML = "";
+      if(!orders.length){
+        adminOrdersList.innerHTML = `<div class="muted">No orders yet.</div>`;
+      }
+
+      orders.forEach(o=>{
+        adminOrdersList.innerHTML += `
+        <div class="card" style="margin-bottom:12px">
         <div><strong>Order ID:</strong> ${o.id}</div>
         <div><strong>Name:</strong> ${o.name}</div>
         <div><strong>Phone:</strong> ${o.phone}</div>
         <div><strong>Address:</strong> ${o.address}</div>
-
+        
         <div style="margin-top:6px"><strong>Items:</strong><br>
-          ${o.items.map(i=>`${i.title} × ${i.qty} — ₱${money(i.price*i.qty)}`).join("<br>")}
+        ${o.items.map(i=>`${i.title} × ${i.qty} — ₱${money(i.price*i.qty)}`).join("<br>")}
         </div>
 
         <div style="margin-top:6px"><strong>Total:</strong> ₱${money(o.total)}</div>
-
+        
         <div style="margin-top:8px">
           <strong>Status:</strong>
           <span class="status-pill status-${o.status}">
@@ -1019,54 +1019,52 @@ function renderAdmin(){
         ${o.receiptImg ? `<img src="${o.receiptImg}" class="receipt-preview">` : ""}
         ${o.ref ? `<div class="small-muted">Ref: ${o.ref}</div>` : ""}
       </div>
-    `;
-  });
+      `;
+      });
 
-  adminModal.style.display = "flex";
-}
+      adminModal.style.display = "flex";
+    }
 
-window.setStatus = function(id, state){
-  const o = orders.find(x=>x.id===id);
-  if(!o) return;
-  o.status = state;
-  save(KEY_ORDERS, orders);
-  renderAdmin();
-};
+    window.setStatus = function(id, state){
+      const o = orders.find(x=>x.id===id);
+      if(!o) return;
+      o.status = state;
+      save(KEY_ORDERS, orders);
+      renderAdmin();
+    };
 
-// ---------- Monthly Report ----------
-openReport.onclick = ()=> reportModal.style.display='flex';
-closeReport.onclick = ()=> reportModal.style.display='none';
+    // ---------- Monthly Report ----------
+    openReport.onclick = ()=> reportModal.style.display='flex';
+    closeReport.onclick = ()=> reportModal.style.display='none';
+    reportMonth.onchange = ()=>{
+      const month = reportMonth.value;
+      if(!month){
+        reportContent.innerHTML = "";
+        return;
+      }
+      const [y,m] = month.split("-");
 
-reportMonth.onchange = ()=>{
-  const month = reportMonth.value;
-  if(!month){
-    reportContent.innerHTML = "";
-    return;
-  }
-  const [y,m] = month.split("-");
+      const list = orders.filter(o=>{
+        const d = new Date(o.date);
+        return d.getFullYear()==+y && (d.getMonth()+1)==+m;
+      });
 
-  const list = orders.filter(o=>{
-    const d = new Date(o.date);
-    return d.getFullYear()==+y && (d.getMonth()+1)==+m;
-  });
+      if(!list.length){
+        reportContent.innerHTML = `<div class="muted">No sales for this month.</div>`;
+        return;
+      }
 
-  if(!list.length){
-    reportContent.innerHTML = `<div class="muted">No sales for this month.</div>`;
-    return;
-  }
+      const tally = {};
+      list.forEach(o=>{
+        o.items.forEach(i=>{
+          tally[i.title] = (tally[i.title]||0) + i.qty;
+        });
+      });
 
-  const tally = {};
-  list.forEach(o=>{
-    o.items.forEach(i=>{
-      tally[i.title] = (tally[i.title]||0) + i.qty;
-    });
-  });
-
-  const sorted = Object.entries(tally).sort((a,b)=>b[1]-a[1]);
-  reportContent.innerHTML =
-    sorted.map(([title,qty])=>`<div class="order-row"><div>${title}</div><div>${qty} sold</div></div>`).join("");
-};
-</script>
+      const sorted = Object.entries(tally).sort((a,b)=>b[1]-a[1]);
+      reportContent.innerHTML =
+        sorted.map(([title,qty])=>`<div class="order-row"><div>${title}</div><div>${qty} sold</div></div>`).join("");
+    };
 
   </script>
 </body>
