@@ -120,7 +120,7 @@
     </div>
   </main>
 
-  <!-- Cart drawer -->
+    <!-- Cart drawer -->
   <div id="cartDrawer" class="cart-drawer" aria-hidden="true">
     <h3>Cart</h3>
     <div id="cartItems"></div>
@@ -131,8 +131,8 @@
   </div>
 
   <!-- Product modal (quick view) -->
-  <div id="modalBackdrop" class="modal-backdrop">
-    <div class="modal">
+  <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
       <div class="content" style="display:grid;grid-template-columns:1fr;gap:12px">
         <div id="modalImage" style="height:320px;background:linear-gradient(180deg,#fff,#fff7f9);display:flex;align-items:center;justify-content:center"></div>
         <div>
@@ -152,12 +152,10 @@
 
   <!-- Checkout modal -->
   <div id="checkoutModal" class="modal-backdrop" aria-hidden="true">
-    <div class="modal">
+    <div class="modal" role="dialog" aria-modal="true">
       <div class="content">
         <h3>Checkout</h3>
-
         <div id="checkoutItems" style="max-height:220px;overflow:auto;margin-bottom:8px"></div>
-
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <div>Subtotal</div><div>₱<span id="checkoutSubtotal">0</span></div>
         </div>
@@ -211,23 +209,51 @@
     </div>
   </div>
 
-  <!-- Admin modal -->
- <h2>Admin — Orders</h2>
-<div>
-  <button id="refreshOrders">Refresh</button>
-  <button id="clearOrders">Clear All Orders</button>
-</div>
-<div id="adminOrdersList"></div>
+  <!-- Admin Login Modal -->
+  <div id="adminLoginModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="content" style="max-width:400px">
+        <h3>Admin Login</h3>
+        <div class="field">
+          <label for="adminUser">Username</label>
+          <input id="adminUser" type="text" placeholder="Enter username" />
+        </div>
+        <div class="field">
+          <label for="adminPass">Password</label>
+          <input id="adminPass" type="password" placeholder="Enter password" />
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" id="adminLoginBtn">Login</button>
+          <button class="chip" id="adminLoginCancel">Cancel</button>
+        </div>
+        <div id="adminLoginMsg" class="small-muted" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
 
-<div>
-  <h3>Export / Import</h3>
-  <button id="exportOrders">Export JSON</button>
-  <input type="file" id="importOrdersFile"/>
-</div>
+  <!-- Admin Orders Modal -->
+  <div id="adminModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="content">
+        <h3>Admin — Orders</h3>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <button id="refreshOrders">Refresh</button>
+          <button id="clearOrders">Clear All Orders</button>
+          <button class="chip" id="closeAdmin">Close</button>
+        </div>
+        <div id="adminOrdersList"></div>
+        <div style="margin-top:12px">
+          <h4>Export / Import</h4>
+          <button id="exportOrders">Export JSON</button>
+          <input type="file" id="importOrdersFile" accept="application/json"/>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Report modal -->
-  <div id="reportModal" class="modal-backdrop">
-    <div class="modal">
+  <div id="reportModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
       <div class="content">
         <h3>Monthly Best Sellers</h3>
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
@@ -249,266 +275,404 @@
   </footer>
 
   <script>
-    // ---------- Data ----------
-    const demoProducts = [
-      {id:'p1',title:'Royal Pearl Necklace',price:2599,cat:'necklaces',desc:'Freshwater pearl necklace with rose-gold plating.',img:'royal-pearl-necklace.jpg'},
-      {id:'p2',title:'Queens Halo Ring',price:1899,cat:'rings',desc:'Cubic zirconia halo ring inspired by royal crowns.',img:'queens-halo-ring.png'},
-      {id:'p3',title:'Luxe Pearl Studs',price:799,cat:'earrings',desc:'Minimal pearl studs with secure backs.',img:'luxe-pearl-studs.png'},
-      {id:'p4',title:'Rose Gold Bangle',price:1299,cat:'bracelets',desc:'Slim bangle with hammered finish.',img:'rose-gold-bangle.png'},
-      {id:'p5',title:'Emerald Drop Earrings',price:2199,cat:'earrings',desc:'Emerald-simulated drop earrings for evening wear.',img:'emerald-drop-earrings.png'},
-      {id:'p6',title:'Silver Minimalist Ring',price:699,cat:'rings',desc:'Everyday silver band, polished finish.',img:'silver-minimalist-ring.png'},
-      {id:'p7',title:'Amethyst Pendant',price:1499,cat:'necklaces',desc:'Purple amethyst pendant on delicate chain.',img:'amethyst-pendant.jpg'},
-      {id:'p8',title:'Stackable Ring Set',price:1199,cat:'rings',desc:'Three stackable rings in mixed metals.',img:'stackable-ring-set.png'},
-    ];
+/* =========================
+   Constants / LocalStorage keys
+   ========================= */
+const KEY_PRODUCTS = 'fq_products_v1';
+const KEY_ORDERS = 'fq_orders_v1';
+const KEY_MONTH = 'fq_month_sales_v1';
+const KEY_CART = 'fq_cart_demo_v1';
 
-    const KEY_PRODUCTS = 'fq_products_v1';
-    const KEY_ORDERS = 'fq_orders_v1';
-    const KEY_MONTH = 'fq_month_sales_v1';
-    const KEY_CART = 'fq_cart_demo_v1';
+/* =========================
+   Demo products (fallback)
+   ========================= */
+const demoProducts = [
+  {id:'p1',title:'Royal Pearl Necklace',price:2599,cat:'necklaces',desc:'Freshwater pearl necklace with rose-gold plating.',img:'royal-pearl-necklace.jpg'},
+  {id:'p2',title:'Queens Halo Ring',price:1899,cat:'rings',desc:'Cubic zirconia halo ring inspired by royal crowns.',img:'queens-halo-ring.png'},
+  {id:'p3',title:'Luxe Pearl Studs',price:799,cat:'earrings',desc:'Minimal pearl studs with secure backs.',img:'luxe-pearl-studs.png'},
+  {id:'p4',title:'Rose Gold Bangle',price:1299,cat:'bracelets',desc:'Slim bangle with hammered finish.',img:'rose-gold-bangle.png'},
+  {id:'p5',title:'Emerald Drop Earrings',price:2199,cat:'earrings',desc:'Emerald-simulated drop earrings for evening wear.',img:'emerald-drop-earrings.png'},
+  {id:'p6',title:'Silver Minimalist Ring',price:699,cat:'rings',desc:'Everyday silver band, polished finish.',img:'silver-minimalist-ring.png'},
+  {id:'p7',title:'Amethyst Pendant',price:1499,cat:'necklaces',desc:'Purple amethyst pendant on delicate chain.',img:'amethyst-pendant.jpg'},
+  {id:'p8',title:'Stackable Ring Set',price:1199,cat:'rings',desc:'Three stackable rings in mixed metals.',img:'stackable-ring-set.jpg'},
+];
 
-    if(!localStorage.getItem(KEY_PRODUCTS)) localStorage.setItem(KEY_PRODUCTS, JSON.stringify(demoProducts));
-    if(!localStorage.getItem(KEY_ORDERS)) localStorage.setItem(KEY_ORDERS, JSON.stringify([]));
-    if(!localStorage.getItem(KEY_MONTH)) localStorage.setItem(KEY_MONTH, JSON.stringify({}));
-    if(!localStorage.getItem(KEY_CART)) localStorage.setItem(KEY_CART, JSON.stringify({}));
+/* =========================
+   Ensure storage initialization
+   ========================= */
+if(!localStorage.getItem(KEY_PRODUCTS)) localStorage.setItem(KEY_PRODUCTS, JSON.stringify(demoProducts));
+if(!localStorage.getItem(KEY_ORDERS)) localStorage.setItem(KEY_ORDERS, JSON.stringify([]));
+if(!localStorage.getItem(KEY_MONTH)) localStorage.setItem(KEY_MONTH, JSON.stringify({}));
+if(!localStorage.getItem(KEY_CART)) localStorage.setItem(KEY_CART, JSON.stringify({}));
 
-    let dataProducts = JSON.parse(localStorage.getItem(KEY_PRODUCTS));
-    let orders = JSON.parse(localStorage.getItem(KEY_ORDERS));
-    let monthSales = JSON.parse(localStorage.getItem(KEY_MONTH));
-    let cart = JSON.parse(localStorage.getItem(KEY_CART));
-    let currentProduct = null;
+let dataProducts = JSON.parse(localStorage.getItem(KEY_PRODUCTS));
+let orders = JSON.parse(localStorage.getItem(KEY_ORDERS));
+let monthSales = JSON.parse(localStorage.getItem(KEY_MONTH));
+let cart = JSON.parse(localStorage.getItem(KEY_CART)); // object keyed by product id for easy merge
+// normalize cart to object shape
+if(!cart || typeof cart !== 'object') cart = {};
+localStorage.setItem(KEY_CART, JSON.stringify(cart));
 
-    const productsEl = document.getElementById('products');
-    const cartCount = document.getElementById('cartCount');
-    const cartDrawer = document.getElementById('cartDrawer');
-    const cartItemsEl = document.getElementById('cartItems');
-    const cartTotalEl = document.getElementById('cartTotal');
+/* Admin credentials (demo) */
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = '1234';
 
-    // ---------- Render Products ----------
-    function renderProducts(filter='all',search=''){
-      productsEl.innerHTML='';
-      const q = search.trim().toLowerCase();
-      dataProducts.filter(p=>{
-        if(filter!=='all' && p.cat!==filter) return false;
-        if(q && !(p.title.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q))) return false;
-        return true;
-      }).forEach(p=>{
-        const div = document.createElement('div');
-        div.className='product';
-        div.innerHTML=`
-          <div class="image"><img src="${p.img}" alt="${p.title}" style="max-width:100%;max-height:100%;object-fit:contain"></div>
-          <div class="body">
-            <div style="font-weight:600">${p.title}</div>
-            <div class="price">₱${p.price}</div>
-            <div class="meta">${p.cat}</div>
-            <div style="height:8px"></div>
-            <button class="btn" onclick="openProductModal('${p.id}')">Add to Cart</button>
-          </div>
-        `;
-        productsEl.appendChild(div);
-      });
-    }
+/* -------------------------
+   DOM references
+   ------------------------- */
+const productsEl = document.getElementById('products');
+const searchInput = document.getElementById('searchInput');
+const cartCountEl = document.getElementById('cartCount');
+const cartDrawer = document.getElementById('cartDrawer');
+const cartItemsEl = document.getElementById('cartItems');
+const cartTotalEl = document.getElementById('cartTotal');
 
-    renderProducts();
+const modalBackdrop = document.getElementById('modalBackdrop');
+const modalTitle = document.getElementById('modalTitle');
+const modalPrice = document.getElementById('modalPrice');
+const modalCategory = document.getElementById('modalCategory');
+const modalDesc = document.getElementById('modalDesc');
+const modalImage = document.getElementById('modalImage');
+const addToCartBtn = document.getElementById('addToCartBtn');
+const qtyInput = document.getElementById('qty');
 
-    // ---------- Search ----------
-    document.getElementById('searchInput').addEventListener('input',e=>{
-      renderProducts('all',e.target.value);
+const checkoutModal = document.getElementById('checkoutModal');
+const checkoutItemsEl = document.getElementById('checkoutItems');
+const checkoutSubtotalEl = document.getElementById('checkoutSubtotal');
+const checkoutShippingEl = document.getElementById('checkoutShipping');
+const receiptFields = document.getElementById('receiptFields');
+const receiptFile = document.getElementById('receiptFile');
+const receiptPreview = document.getElementById('receiptPreview');
+const payRefInput = document.getElementById('payRef');
+
+const adminLoginModal = document.getElementById('adminLoginModal');
+const adminModal = document.getElementById('adminModal');
+const adminLoginMsg = document.getElementById('adminLoginMsg');
+const adminOrdersList = document.getElementById('adminOrdersList');
+
+const reportModal = document.getElementById('reportModal');
+const reportContent = document.getElementById('reportContent');
+const reportMonth = document.getElementById('reportMonth');
+
+/* -------------------------
+   Render products grid
+   ------------------------- */
+function renderProducts(filter='all', q='') {
+  productsEl.innerHTML = '';
+  const qlow = (q||'').trim().toLowerCase();
+  dataProducts.filter(p => {
+    if(filter !== 'all' && p.cat !== filter) return false;
+    if(qlow && !(p.title.toLowerCase().includes(qlow) || p.desc.toLowerCase().includes(qlow))) return false;
+    return true;
+  }).forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `
+      <div class="image"><img src="${p.img}" alt="${p.title}" style="max-width:100%;max-height:100%;object-fit:contain"></div>
+      <div class="body">
+        <div style="font-weight:600">${p.title}</div>
+        <div class="price">₱${p.price}</div>
+        <div class="meta">${p.cat}</div>
+        <div style="height:8px"></div>
+        <button class="btn" data-id="${p.id}">View</button>
+      </div>
+    `;
+    productsEl.appendChild(div);
+  });
+}
+renderProducts();
+
+/* category chips and search */
+document.querySelectorAll('.chip[data-cat]').forEach(chip=>{
+  chip.addEventListener('click', ()=> {
+    document.querySelectorAll('.chip[data-cat]').forEach(c=>c.style.borderColor='#eee');
+    chip.style.borderColor='var(--accent)';
+    renderProducts(chip.dataset.cat, searchInput.value);
+  });
+});
+searchInput.addEventListener('input', ()=> renderProducts('all', searchInput.value));
+
+/* -------------------------
+   Product modal (view + add)
+   ------------------------- */
+let currentProduct = null;
+productsEl.addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-id]');
+  if(!btn) return;
+  const id = btn.dataset.id;
+  openProductModal(id);
+});
+
+function openProductModal(id){
+  currentProduct = dataProducts.find(p=>p.id===id);
+  if(!currentProduct) return;
+  modalTitle.innerText = currentProduct.title;
+  modalPrice.innerText = '₱' + currentProduct.price;
+  modalCategory.innerText = currentProduct.cat;
+  modalDesc.innerText = currentProduct.desc;
+  modalImage.innerHTML = `<img src="${currentProduct.img}" alt="${currentProduct.title}" style="max-width:100%;max-height:100%;object-fit:contain">`;
+  qtyInput.value = 1;
+  modalBackdrop.style.display = 'flex';
+}
+modalBackdrop.addEventListener('click', e => { if(e.target === modalBackdrop) modalBackdrop.style.display = 'none'; });
+
+addToCartBtn.addEventListener('click', ()=>{
+  const qty = Math.max(1, parseInt(qtyInput.value) || 1);
+  if(!currentProduct) return;
+  // store cart as object keyed by id for stable merging
+  if(!cart[currentProduct.id]) cart[currentProduct.id] = { id: currentProduct.id, title: currentProduct.title, price: currentProduct.price, qty: 0 };
+  cart[currentProduct.id].qty += qty;
+  localStorage.setItem(KEY_CART, JSON.stringify(cart));
+  modalBackdrop.style.display = 'none';
+  updateCartUI();
+});
+
+/* -------------------------
+   Cart UI
+   ------------------------- */
+function updateCartUI(){
+  // update count badge
+  const keys = Object.keys(cart);
+  const count = keys.reduce((s,k)=>s + (cart[k].qty||0),0);
+  cartCountEl.innerText = count;
+
+  // update drawer
+  cartItemsEl.innerHTML = '';
+  if(keys.length === 0){
+    cartItemsEl.innerHTML = '<div>No items in cart</div>';
+    cartTotalEl.innerText = 0;
+    return;
+  }
+  let total = 0;
+  keys.forEach(k=>{
+    const it = cart[k];
+    const itemRow = document.createElement('div');
+    itemRow.className = 'cart-item';
+    const lineTotal = it.price * it.qty;
+    itemRow.innerHTML = `<div>${it.title} x ${it.qty}</div><div>₱${lineTotal}</div>
+      <div style="margin-left:8px"><button class="chip btn-sm" data-remove="${it.id}">Remove</button></div>`;
+    cartItemsEl.appendChild(itemRow);
+    total += lineTotal;
+  });
+  cartTotalEl.innerText = total;
+}
+updateCartUI();
+
+cartItemsEl.addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-remove]');
+  if(!btn) return;
+  const id = btn.dataset.remove;
+  delete cart[id];
+  localStorage.setItem(KEY_CART, JSON.stringify(cart));
+  updateCartUI();
+});
+
+document.getElementById('openCartBtn').addEventListener('click', ()=>{
+  renderCart();
+  cartDrawer.style.display = 'block';
+});
+
+function renderCart(){
+  updateCartUI();
+}
+
+/* close cart by clicking elsewhere — not implemented (kept simple) */
+
+/* buy now -> open checkout */
+document.getElementById('buyNow').addEventListener('click', ()=>{
+  cartDrawer.style.display = 'none';
+  renderCheckout();
+  checkoutModal.style.display = 'flex';
+});
+
+/* -------------------------
+   Checkout flow
+   ------------------------- */
+document.getElementById('checkoutBtn').addEventListener('click', ()=>{
+  // if user clicks "Proceed to Checkout" from sidebar
+  if(Object.keys(cart).length === 0){ alert('Cart empty'); return; }
+  renderCheckout();
+  checkoutModal.style.display = 'flex';
+});
+
+function renderCheckout(){
+  checkoutItemsEl.innerHTML = '';
+  let subtotal = 0;
+  Object.values(cart).forEach(it=>{
+    const p = dataProducts.find(x=>x.id===it.id);
+    const line = document.createElement('div');
+    line.className = 'order-row';
+    line.innerHTML = `<div>${it.title} x ${it.qty}</div><div>₱${it.price * it.qty}</div>`;
+    checkoutItemsEl.appendChild(line);
+    subtotal += it.price * it.qty;
+  });
+  checkoutSubtotalEl.innerText = subtotal;
+}
+
+document.getElementById('cancelCheckout').addEventListener('click', ()=>{
+  checkoutModal.style.display = 'none';
+});
+
+/* receipt fields show/hide */
+document.querySelectorAll('input[name="pay"]').forEach(r=>{
+  r.addEventListener('change', e => {
+    receiptFields.style.display = (e.target.value === 'gcash' || e.target.value === 'paymaya') ? 'block' : 'none';
+  });
+});
+
+/* receipt preview */
+receiptFile.addEventListener('change', e => {
+  const f = e.target.files[0];
+  if(!f){ receiptPreview.style.display = 'none'; return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    receiptPreview.src = reader.result;
+    receiptPreview.style.display = 'block';
+  };
+  reader.readAsDataURL(f);
+});
+
+/* place order */
+document.getElementById('submitCheckout').addEventListener('click', ()=>{
+  const name = document.getElementById('shipName').value.trim();
+  const phone = document.getElementById('shipPhone').value.trim();
+  const addr = document.getElementById('shipAddress').value.trim();
+  const pay = document.querySelector('input[name="pay"]:checked').value;
+  if(!name || !phone || !addr){ alert('Please fill all shipping info.'); return; }
+
+  // Validate receipt when needed
+  let receiptData = '';
+  if(pay === 'gcash' || pay === 'paymaya'){
+    if(!payRefInput.value.trim() || !receiptFile.files[0]){ alert('Please upload receipt and enter reference number'); return; }
+  }
+
+  // Build order object - store items as array of {id,title,price,qty}
+  const items = Object.values(cart).map(c => ({ id: c.id, title: c.title, price: c.price, qty: c.qty }));
+  const subtotal = parseInt(checkoutSubtotalEl.innerText || '0', 10);
+  const shipping = parseInt(checkoutShippingEl.innerText || '0', 10);
+  const order = {
+    id: 'o' + Date.now(),
+    items,
+    subtotal,
+    shipping,
+    total: subtotal + shipping,
+    name, phone, addr, pay,
+    ref: payRefInput.value ? payRefInput.value.trim() : '',
+    receipt: '', // will be set if file provided
+    status: 'pending',
+    date: new Date().toISOString()
+  };
+
+  function finalize(orderWithReceipt=''){
+    if(orderWithReceipt) order.receipt = orderWithReceipt;
+    orders.push(order);
+    localStorage.setItem(KEY_ORDERS, JSON.stringify(orders));
+
+    // Update monthly sales
+    const monthKey = new Date().toISOString().slice(0,7);
+    if(!monthSales[monthKey]) monthSales[monthKey] = {};
+    order.items.forEach(it => {
+      monthSales[monthKey][it.title] = (monthSales[monthKey][it.title] || 0) + it.qty;
     });
+    localStorage.setItem(KEY_MONTH, JSON.stringify(monthSales));
 
-    // ---------- Categories ----------
-    document.querySelectorAll('.chip').forEach(chip=>{
-      chip.addEventListener('click',()=>{
-        document.querySelectorAll('.chip').forEach(c=>c.style.borderColor='#eee');
-        chip.style.borderColor='var(--accent)';
-        renderProducts(chip.dataset.cat, document.getElementById('searchInput').value);
-      });
-    });
+    // Clear cart
+    cart = {};
+    localStorage.setItem(KEY_CART, JSON.stringify(cart));
+    updateCartUI();
 
-    // ---------- Cart ----------
-    function updateCartUI(){
-      let total=0; cartItemsEl.innerHTML='';
-      const keys = Object.keys(cart);
-      if(keys.length===0) cartItemsEl.innerHTML='<div>No items in cart</div>';
-      keys.forEach(pid=>{
-        const item = cart[pid];
-        const div = document.createElement('div');
-        div.className='cart-item';
-        div.innerHTML=`<div>${item.title} x ${item.qty}</div>
-        <div>₱${item.price*item.qty}</div>
-        <button class="chip btn-sm" onclick="removeFromCart('${pid}')">Remove</button>`;
-        cartItemsEl.appendChild(div);
-        total += item.price*item.qty;
-      });
-      cartTotalEl.innerText=total;
-      cartCount.innerText=keys.length;
-      localStorage.setItem(KEY_CART, JSON.stringify(cart));
-    }
+    checkoutModal.style.display = 'none';
+    alert('Order placed successfully!');
+  }
 
-    function openCart(){ cartDrawer.style.display='block'; updateCartUI(); }
-    function closeCart(){ cartDrawer.style.display='none'; }
-    document.getElementById('openCartBtn').addEventListener('click',openCart);
+  if(receiptFile.files[0]){
+    const reader = new FileReader();
+    reader.onload = () => {
+      finalize(reader.result);
+    };
+    reader.readAsDataURL(receiptFile.files[0]);
+  } else {
+    finalize();
+  }
+});
 
-    function addToCart(p,qty){
-      if(cart[p.id]) cart[p.id].qty += qty;
-      else cart[p.id] = {...p, qty};
-      updateCartUI();
-    }
+/* -------------------------
+   Admin login & admin modal
+   ------------------------- */
+document.getElementById('openAdmin').addEventListener('click', ()=> {
+  adminLoginModal.style.display = 'flex';
+});
+document.getElementById('adminLoginCancel').addEventListener('click', ()=> {
+  adminLoginModal.style.display = 'none';
+  adminLoginMsg.innerText = '';
+});
+document.getElementById('adminLoginBtn').addEventListener('click', ()=>{
+  const u = document.getElementById('adminUser').value.trim();
+  const p = document.getElementById('adminPass').value.trim();
+  if(u === ADMIN_USER && p === ADMIN_PASS){
+    adminLoginModal.style.display = 'none';
+    adminLoginMsg.innerText = '';
+    adminModal.style.display = 'flex';
+    renderAdminOrders(); // render fresh
+  } else {
+    adminLoginMsg.innerText = 'Invalid username or password';
+  }
+});
+document.getElementById('closeAdmin').addEventListener('click', ()=> adminModal.style.display = 'none');
+// close when clicking backdrop, keep inner modal safe
+adminModal.addEventListener('click', e => { if(e.target === adminModal) adminModal.style.display = 'none'; });
 
-    function removeFromCart(pid){ delete cart[pid]; updateCartUI(); }
-
-    // ---------- Product Modal ----------
-    const modalBackdrop = document.getElementById('modalBackdrop');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalPrice = document.getElementById('modalPrice');
-    const modalCategory = document.getElementById('modalCategory');
-    const modalDesc = document.getElementById('modalDesc');
-    const modalImage = document.getElementById('modalImage');
-    const addToCartBtn = document.getElementById('addToCartBtn');
-    const qtyInput = document.getElementById('qty');
-
-    function openProductModal(pid){
-      currentProduct = dataProducts.find(p=>p.id===pid);
-      if(!currentProduct) return;
-      modalTitle.innerText = currentProduct.title;
-      modalPrice.innerText = '₱'+currentProduct.price;
-      modalCategory.innerText = currentProduct.cat;
-      modalDesc.innerText = currentProduct.desc;
-      modalImage.innerHTML = `<img src="${currentProduct.img}" alt="${currentProduct.title}" style="max-width:100%;max-height:100%;object-fit:contain">`;
-      qtyInput.value=1;
-      modalBackdrop.style.display='flex';
-    }
-
-    addToCartBtn.addEventListener('click',()=>{
-      addToCart(currentProduct, parseInt(qtyInput.value)||1);
-      modalBackdrop.style.display='none';
-    });
-
-    modalBackdrop.addEventListener('click',e=>{if(e.target===modalBackdrop) modalBackdrop.style.display='none';});
-
-    // ---------- Checkout ----------
-    const checkoutModal = document.getElementById('checkoutModal');
-    const checkoutItems = document.getElementById('checkoutItems');
-    const checkoutSubtotal = document.getElementById('checkoutSubtotal');
-    const checkoutShipping = document.getElementById('checkoutShipping');
-    const shipName = document.getElementById('shipName');
-    const shipPhone = document.getElementById('shipPhone');
-    const shipAddress = document.getElementById('shipAddress');
-    const receiptFields = document.getElementById('receiptFields');
-    const receiptFile = document.getElementById('receiptFile');
-    const receiptPreview = document.getElementById('receiptPreview');
-    const payRef = document.getElementById('payRef');
-    const checkoutMsg = document.getElementById('checkoutMsg');
-
-    document.getElementById('checkoutBtn').addEventListener('click',()=>{
-      if(Object.keys(cart).length===0){ alert('Cart empty'); return; }
-      checkoutModal.style.display='flex'; renderCheckoutItems();
-    });
-
-    function renderCheckoutItems(){
-      checkoutItems.innerHTML=''; let subtotal=0;
-      Object.values(cart).forEach(it=>{
-        const div = document.createElement('div');
-        div.className='order-row';
-        div.innerHTML=`<div>${it.title} x ${it.qty}</div><div>₱${it.price*it.qty}</div>`;
-        checkoutItems.appendChild(div);
-        subtotal+=it.price*it.qty;
-      });
-      checkoutSubtotal.innerText=subtotal;
-    }
-
-    // Payment option show/hide
-    document.querySelectorAll('input[name="pay"]').forEach(inp=>{
-      inp.addEventListener('change',()=>{
-        receiptFields.style.display=(inp.value==='gcash'||inp.value==='paymaya')?'block':'none';
-      });
-    });
-
-    receiptFile.addEventListener('change',e=>{
-      const f = e.target.files[0];
-      if(!f) return receiptPreview.style.display='none';
-      const reader = new FileReader();
-      reader.onload = ()=>{ receiptPreview.src = reader.result; receiptPreview.style.display='block'; }
-      reader.readAsDataURL(f);
-    });
-
-    document.getElementById('cancelCheckout').addEventListener('click',()=>{checkoutModal.style.display='none'; checkoutMsg.innerText='';});
-
-    document.getElementById('submitCheckout').addEventListener('click',()=>{
-      const name=shipName.value.trim(),phone=shipPhone.value.trim(),addr=shipAddress.value.trim();
-      const pay=document.querySelector('input[name="pay"]:checked').value;
-      if(!name||!phone||!addr){ checkoutMsg.innerText='Please fill in all shipping info'; return; }
-
-      const order={id:'o'+Date.now(),items:cart,subtotal:parseInt(checkoutSubtotal.innerText),shipping:parseInt(checkoutShipping.innerText),total:parseInt(checkoutSubtotal.innerText)+parseInt(checkoutShipping.innerText),name,phone,addr,pay,status:'pending',date:new Date().toISOString(),receipt:''};
-
-      if(pay==='gcash'||pay==='paymaya'){
-        if(!payRef.value.trim()||!receiptFile.files[0]){ checkoutMsg.innerText='Please upload receipt and enter reference number'; return; }
-        order.ref = payRef.value.trim();
-        const reader = new FileReader();
-        reader.onload = ()=>{ order.receipt = reader.result; finalizeOrder(order); };
-        reader.readAsDataURL(receiptFile.files[0]);
-      } else finalizeOrder(order);
-    });
-
-    function finalizeOrder(order){
-      orders.push(order); localStorage.setItem(KEY_ORDERS,JSON.stringify(orders));
-      // Update monthly sales
-      const m = new Date().toISOString().slice(0,7);
-      if(!monthSales[m]) monthSales[m]={};
-      Object.values(order.items).forEach(it=>{ monthSales[m][it.title]=(monthSales[m][it.title]||0)+it.qty; });
-      localStorage.setItem(KEY_MONTH,JSON.stringify(monthSales));
-      // Clear cart
-      cart={}; localStorage.setItem(KEY_CART,JSON.stringify(cart));
-      checkoutModal.style.display='none'; checkoutMsg.innerText=''; updateCartUI();
-      alert('Order placed successfully!');
-    }
-
-
-
-    // ---------- Admin ----------
-    
-    const adminOrdersList = document.getElementById('adminOrdersList');
-    const refreshOrdersBtn = document.getElementById('refreshOrders');
-    const clearOrdersBtn = document.getElementById('clearOrders');
-    const exportOrdersBtn = document.getElementById('exportOrders');
-    const importOrdersFile = document.getElementById('importOrdersFile');
-    const adminModal = document.querySelector('h2 + div'); // selects the Admin — Orders section
-    adminModal.style.display = 'none'; // hide initially
-
+/* -------------------------
+   Admin Orders rendering + actions
+   ------------------------- */
+const refreshOrdersBtn = document.getElementById('refreshOrders');
+const clearOrdersBtn = document.getElementById('clearOrders');
+const exportOrdersBtn = document.getElementById('exportOrders');
+const importOrdersFile = document.getElementById('importOrdersFile');
 
 function getStatusColor(status) {
   switch(status){
-    case 'pending': return '#fff8b3'; // yellow
-    case 'paid': return '#b3d9ff';    // blue
-    case 'delivered': return '#b3ffb3'; // green
+    case 'pending': return '#fff8e6'; // soft yellow
+    case 'paid': return '#e6fff0';    // soft green
+    case 'delivered': return '#e9f0ff'; // soft blue
     default: return '#f9f9f9';
   }
 }
 
 function renderAdminOrders(){
   adminOrdersList.innerHTML = '';
-  if(orders.length === 0){
-    adminOrdersList.innerHTML = '<div>No orders yet</div>';
+  if(!orders || orders.length === 0){
+    adminOrdersList.innerHTML = '<div class="small-muted">No orders yet.</div>';
     return;
   }
 
   orders.forEach((o, idx) => {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.style.border = '1px solid #ccc';
-    div.style.padding = '10px';
-    div.style.margin = '8px 0';
-    div.style.backgroundColor = getStatusColor(o.status);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.border = '1px solid #ccc';
+    card.style.padding = '10px';
+    card.style.margin = '8px 0';
+    card.style.backgroundColor = getStatusColor(o.status || 'pending');
 
-    // Safe mapping of items
-    const itemsText = Object.values(o.items || {}).map(i => `${i.title || ''} x ${i.qty || 0}`).join(', ');
+    // items description
+    const itemsText = (o.items || []).map(it => `${it.title || it.id || 'item'} x ${it.qty || 0}`).join(', ');
 
-    // Status dropdown
+    // top info
+    const top = document.createElement('div');
+    top.innerHTML = `<div><strong>${o.name || ''}</strong> — ${new Date(o.date).toLocaleString()}</div>
+      <div class="small-muted">Phone: ${o.phone || ''} | Address: ${o.addr || ''}</div>
+      <div class="small-muted">Items: ${itemsText}</div>
+      <div class="small-muted">Payment: ${o.pay || ''} ${o.ref ? ('| Ref: ' + o.ref) : ''}</div>
+      <div>Total: ₱${(o.total || (o.subtotal||0) + (o.shipping||0))}</div>
+      <div>Status: </div>`;
+
+    // status select
     const statusSelect = document.createElement('select');
     ['pending','paid','delivered'].forEach(s=>{
       const opt = document.createElement('option');
       opt.value = s;
       opt.text = s.charAt(0).toUpperCase() + s.slice(1);
-      if(o.status === s) opt.selected = true;
+      if((o.status || 'pending') === s) opt.selected = true;
       statusSelect.appendChild(opt);
     });
     statusSelect.addEventListener('change', e => {
@@ -517,22 +681,44 @@ function renderAdminOrders(){
       renderAdminOrders();
     });
 
-    div.innerHTML = `
-      <div><strong>${o.name || ''}</strong> — ${o.date || ''}</div>
-      <div class="small-muted">Phone: ${o.phone || ''} | Address: ${o.addr || ''}</div>
-      <div class="small-muted">Items: ${itemsText}</div>
-      <div class="small-muted">Payment: ${o.pay || ''} ${o.ref || ''}</div>
-      <div>Status: </div>
-    `;
-    div.querySelector('div:last-child').appendChild(statusSelect);
-    adminOrdersList.appendChild(div);
+    // delete button
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'chip btn-sm';
+    deleteBtn.innerText = 'Delete';
+    deleteBtn.addEventListener('click', ()=>{
+      if(confirm('Delete this order?')){
+        orders.splice(idx, 1);
+        localStorage.setItem(KEY_ORDERS, JSON.stringify(orders));
+        renderAdminOrders();
+      }
+    });
+
+    card.appendChild(top);
+    // append status select + delete btn inside top's last div
+    const statusContainer = document.createElement('div');
+    statusContainer.style.marginTop = '8px';
+    statusContainer.appendChild(statusSelect);
+    statusContainer.appendChild(deleteBtn);
+    card.appendChild(statusContainer);
+
+    // optionally show receipt thumbnail
+    if(o.receipt){
+      const img = document.createElement('img');
+      img.src = o.receipt;
+      img.alt = 'receipt';
+      img.style.maxWidth = '120px';
+      img.style.display = 'block';
+      img.style.marginTop = '8px';
+      card.appendChild(img);
+    }
+
+    adminOrdersList.appendChild(card);
   });
 }
 
-// Buttons
 refreshOrdersBtn.addEventListener('click', renderAdminOrders);
 
-clearOrdersBtn.addEventListener('click', () => {
+clearOrdersBtn.addEventListener('click', ()=>{
   if(confirm('Clear all orders?')){
     orders = [];
     localStorage.setItem(KEY_ORDERS, JSON.stringify(orders));
@@ -540,67 +726,78 @@ clearOrdersBtn.addEventListener('click', () => {
   }
 });
 
-// Export
-exportOrdersBtn.addEventListener('click', () => {
-  const blob = new Blob([JSON.stringify(orders, null, 2)], {type:'application/json'});
+/* -------------------------
+   Export / Import orders
+   ------------------------- */
+exportOrdersBtn.addEventListener('click', ()=>{
+  if(!orders || orders.length === 0){ alert('No orders to export.'); return; }
+  const blob = new Blob([JSON.stringify(orders, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
   a.download = 'orders.json';
+  document.body.appendChild(a);
   a.click();
+  a.remove();
   URL.revokeObjectURL(url);
 });
 
-// Import
-importOrdersFile.addEventListener('change', e => {
+importOrdersFile.addEventListener('change', (e)=>{
   const file = e.target.files[0];
   if(!file) return;
   const reader = new FileReader();
-  reader.onload = event => {
+  reader.onload = (evt)=>{
     try {
-      const imported = JSON.parse(event.target.result);
-      if(Array.isArray(imported)){
-        orders = imported;
-        localStorage.setItem(KEY_ORDERS, JSON.stringify(orders));
-        renderAdminOrders();
-      } else {
-        alert('Invalid JSON file');
-      }
+      const imported = JSON.parse(evt.target.result);
+      if(!Array.isArray(imported)) throw 'Invalid format';
+      // Basic merge dedupe by id (if the imported order id already exists skip)
+      const existingIds = new Set(orders.map(o => o.id));
+      const toAdd = imported.filter(o => !existingIds.has(o.id));
+      if(toAdd.length === 0){ alert('No new orders to import.'); return; }
+      orders = orders.concat(toAdd);
+      localStorage.setItem(KEY_ORDERS, JSON.stringify(orders));
+      renderAdminOrders();
+      alert(`Imported ${toAdd.length} orders.`);
     } catch(err){
-      alert('Error reading JSON file');
+      alert('Import failed: ' + err);
     }
   };
   reader.readAsText(file);
 });
 
-// Initial render
+/* -------------------------
+   Monthly report
+   ------------------------- */
+document.getElementById('openReport').addEventListener('click', ()=>{
+  reportModal.style.display = 'flex';
+  renderReport();
+});
+document.getElementById('closeReport').addEventListener('click', ()=> reportModal.style.display = 'none');
+reportMonth.addEventListener('change', ()=> renderReport(reportMonth.value));
+
+function renderReport(month){
+  const m = month || new Date().toISOString().slice(0,7);
+  reportContent.innerHTML = '';
+  if(!monthSales[m] || Object.keys(monthSales[m]).length === 0){
+    reportContent.innerHTML = '<div class="small-muted">No sales this month</div>';
+    return;
+  }
+  const list = Object.entries(monthSales[m]).sort((a,b)=>b[1]-a[1]);
+  list.forEach(([title, qty])=>{
+    const div = document.createElement('div');
+    div.className = 'order-row';
+    div.innerHTML = `<div>${title}</div><div>Sold: ${qty}</div>`;
+    reportContent.appendChild(div);
+  });
+}
+
+/* -------------------------
+   Final initialization
+   ------------------------- */
+renderProducts();
+updateCartUI();
 renderAdminOrders();
-    
 
-    // ---------- Monthly Report ----------
-    const reportModal = document.getElementById('reportModal');
-    const reportContent = document.getElementById('reportContent');
-    document.getElementById('openReport').addEventListener('click',()=>{ reportModal.style.display='flex'; renderReport(); });
-    document.getElementById('closeReport').addEventListener('click',()=>{ reportModal.style.display='none'; });
-
-    function renderReport(month){
-      const m = month || document.getElementById('reportMonth').value || new Date().toISOString().slice(0,7);
-      reportContent.innerHTML='';
-      if(!monthSales[m]) reportContent.innerHTML='<div>No sales this month</div>';
-      else {
-        const list = Object.entries(monthSales[m]).sort((a,b)=>b[1]-a[1]);
-        list.forEach(([title,qty])=>{
-          const div = document.createElement('div'); div.className='order-row';
-          div.innerHTML=`<div>${title}</div><div>Sold: ${qty}</div>`;
-          reportContent.appendChild(div);
-        });
-      }
-    }
-
-    document.getElementById('reportMonth').addEventListener('change',()=>{ renderReport(document.getElementById('reportMonth').value); });
-
-    // Initial cart UI
-    updateCartUI();
-  </script>
+</script>
 </body>
 </html>
