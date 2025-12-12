@@ -474,129 +474,41 @@
     }
 
     // ---------- Admin ----------
-    <h2>Admin — Orders</h2>
-      <div>
-      <button id="refreshOrders">Refresh</button>
-      <button id="clearOrders">Clear All Orders</button>
-      </div>
-      <div id="adminOrdersList"></div>
-
-      <div>
-      <h3>Export / Import</h3>
-      <button id="exportOrders">Export JSON</button>
-      <input type="file" id="importOrdersFile"/>
-      </div>
-
-      <script>
-      const KEY_ORDERS = 'orders';
-    let orders = JSON.parse(localStorage.getItem(KEY_ORDERS)) || [];
-
+    const adminModal = document.getElementById('adminModal');
     const adminOrdersList = document.getElementById('adminOrdersList');
-    const refreshOrdersBtn = document.getElementById('refreshOrders');
-    const clearOrdersBtn = document.getElementById('clearOrders');
-    const exportOrdersBtn = document.getElementById('exportOrders');
-    const importOrdersFile = document.getElementById('importOrdersFile');
-
-    function getStatusColor(status) {
-      switch(status){
-        case 'pending': return '#fff8b3'; // yellow
-        case 'paid': return '#b3d9ff';    // blue
-        case 'delivered': return '#b3ffb3'; // green
-        default: return '#f9f9f9';
-      }
-    }
+    document.getElementById('openAdmin').addEventListener('click',()=>{ adminModal.style.display='flex'; renderAdminOrders();});
+    document.getElementById('closeAdmin').addEventListener('click',()=>{ adminModal.style.display='none'; });
 
     function renderAdminOrders(){
-      adminOrdersList.innerHTML = '';
-      if(orders.length === 0){
-        adminOrdersList.innerHTML = '<div>No orders yet</div>';
-        return;
-      }
-
-      orders.forEach((o, idx) => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.style.border = '1px solid #ccc';
-        div.style.padding = '10px';
-        div.style.margin = '8px 0';
-        div.style.backgroundColor = getStatusColor(o.status);
-
-        // Safe mapping of items
-        const itemsText = Object.values(o.items || {}).map(i => `${i.title || ''} x ${i.qty || 0}`).join(', ');
-
-        // Status dropdown
-        const statusSelect = document.createElement('select');
-        ['pending','paid','delivered'].forEach(s=>{
-          const opt = document.createElement('option');
-          opt.value = s;
-          opt.text = s.charAt(0).toUpperCase() + s.slice(1);
-          if(o.status === s) opt.selected = true;
-          statusSelect.appendChild(opt);
-        });
-        statusSelect.addEventListener('change', e => {
-          o.status = e.target.value;
-          localStorage.setItem(KEY_ORDERS, JSON.stringify(orders));
-          renderAdminOrders();
-        });
-
-        div.innerHTML = `
-        <div><strong>${o.name || ''}</strong> — ${o.date || ''}</div>
-        <div class="small-muted">Phone: ${o.phone || ''} | Address: ${o.addr || ''}</div>
-        <div class="small-muted">Items: ${itemsText}</div>
-        <div class="small-muted">Payment: ${o.pay || ''} ${o.ref || ''}</div>
-        <div>Status: </div>
-        `;
-        div.querySelector('div:last-child').appendChild(statusSelect);
+      adminOrdersList.innerHTML='';
+      if(orders.length===0){ adminOrdersList.innerHTML='<div>No orders yet</div>'; return; }
+      orders.forEach(o=>{
+        const div = document.createElement('div'); div.className='card';
+        let statusClass = o.status==='pending'?'status-pending':o.status==='paid'?'status-paid':'status-delivered';
+        div.innerHTML=`<div class="order-row">
+          <div><strong>${o.name}</strong><br/><span class="small-muted">${o.date}</span></div>
+          <div><span class="status-pill ${statusClass}">${o.status}</span></div>
+        </div>
+        <div class="small-muted">Items: ${Object.values(o.items).map(i=>i.title+' x '+i.qty).join(', ')}</div>
+        <div class="small-muted">Payment: ${o.pay} ${o.ref||''}</div>`;
         adminOrdersList.appendChild(div);
       });
     }
 
-    // Buttons
-    refreshOrdersBtn.addEventListener('click', renderAdminOrders);
+    document.getElementById('refreshAdmin').addEventListener('click',renderAdminOrders);
+    document.getElementById('clearOrders').addEventListener('click',()=>{ if(confirm('Clear all orders?')){ orders=[]; localStorage.setItem(KEY_ORDERS,JSON.stringify(orders)); renderAdminOrders(); } });
 
-    clearOrdersBtn.addEventListener('click', () => {
-      if(confirm('Clear all orders?')){
-        orders = [];
-        localStorage.setItem(KEY_ORDERS, JSON.stringify(orders));
-        renderAdminOrders();
-      }
+    document.getElementById('exportData').addEventListener('click',()=>{
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({orders,monthSales}));
+      const dl = document.createElement('a'); dl.setAttribute('href',dataStr); dl.setAttribute('download','fq_orders_export.json'); dl.click();
     });
 
-    // Export
-    exportOrdersBtn.addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(orders, null, 2)], {type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'orders.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    // Import
-    importOrdersFile.addEventListener('change', e => {
-      const file = e.target.files[0];
-      if(!file) return;
+    document.getElementById('importFile').addEventListener('change',e=>{
+      const f = e.target.files[0]; if(!f) return;
       const reader = new FileReader();
-      reader.onload = event => {
-        try {
-          const imported = JSON.parse(event.target.result);
-          if(Array.isArray(imported)){
-            orders = imported;
-            localStorage.setItem(KEY_ORDERS, JSON.stringify(orders));
-            renderAdminOrders();
-          } else {
-            alert('Invalid JSON file');
-          }
-        } catch(err){
-          alert('Error reading JSON file');
-        }
-      };
-      reader.readAsText(file);
+      reader.onload=()=>{ try{ const data=JSON.parse(reader.result); if(data.orders) orders=data.orders; if(data.monthSales) monthSales=data.monthSales; localStorage.setItem(KEY_ORDERS,JSON.stringify(orders)); localStorage.setItem(KEY_MONTH,JSON.stringify(monthSales)); renderAdminOrders(); alert('Import success'); }catch(err){alert('Invalid JSON');} }
+      reader.readAsText(f);
     });
-
-    // Initial render
-    renderAdminOrders();
 
     // ---------- Monthly Report ----------
     const reportModal = document.getElementById('reportModal');
