@@ -508,12 +508,13 @@ document.getElementById('adminLoginBtn').addEventListener('click',()=>{
   if(u===ADMIN_USER && p===ADMIN_PASS){
     adminLoginModal.style.display='none';
     adminLoginMsg.innerText='';
-    adminModal.style.display='flex';
+    adminModal.style.display='block'; // show admin orders section
     renderAdminOrders();
   } else {
     adminLoginMsg.innerText='Invalid username or password';
   }
 });
+
 
 
     // ---------- Admin ----------
