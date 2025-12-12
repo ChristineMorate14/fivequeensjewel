@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Five Queens Jewelry — Admin</title>
+<link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
+<style>
+:root{--accent:#b76e79;--muted:#6b6b6b;--card:#fff;--shadow:0 6px 24px rgba(16,24,40,0.08);--max:1100px}
+*{box-sizing:border-box}body{margin:0;font-family:'Inter',Arial,sans-serif;background:#faf8f8;color:#111}
+.header{background:#fff;padding:16px 20px;box-shadow:0 6px 18px rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center}
+.container{max-width:1100px;margin:18px auto;padding:0 18px}
+.h1{font-size:20px;font-weight:700}
+.card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow);margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 320px;gap:16px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+.chip{padding:6px 10px;border-radius:999px;border:1px solid #eee;background:#fff;cursor:pointer}
+.small-muted{color:var(--muted);font-size:13px}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:8px;border-bottom:1px solid #f2f2f2;text-align:left;font-size:14px}
+.status-pending{background:#fff8e6;color:#8a5a2a;padding:6px 8px;border-radius:999px}
+.status-paid{background:#e6fff0;color:#1b8f4a;padding:6px 8px;border-radius:999px}
+.status-delivered{background:#e9f0ff;color:#1b4db8;padding:6px 8px;border-radius:999px}
+.order-card{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:12px;border-radius:8px;border:1px solid #eee;margin-bottom:10px}
+.order-left{flex:1}
+.order-actions{display:flex;gap:8px;align-items:center}
+.upload-img{max-width:120px;border-radius:6px;margin-top:8px}
+.footer{padding:24px;text-align:center;color:var(--muted)}
+.input{padding:8px;border-radius:8px;border:1px solid #eee}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="h1">Five Queens Jewelry — Admin Dashboard</div>
+  <div class="controls">
+    <button id="logoutBtn" class="chip">Logout</button>
+  </div>
+</div>
+
+<div class="container">
+  <div id="loginArea" class="card" style="display:none;max-width:480px;margin:0 auto">
+    <h3>Admin Login</h3>
+    <div class="field"><label>Username</label><input id="adminUser" class="input" placeholder="admin" /></div>
+    <div class="field"><label>Password</label><input id="adminPass" type="password" class="input" placeholder="admin123" /></div>
+    <div style="margin-top:8px"><button id="loginBtn" class="btn">Login</button> <span id="loginMsg" class="small-muted" style="margin-left:8px"></span></div>
+  </div>
+
+  <div id="dashboard" style="display:none">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div class="card" style="min-width:160px">
+          <div style="font-size:13px" class="small-muted">Total Orders</div>
+          <div id="statTotal" style="font-weight:700;font-size:18px">0</div>
+        </div>
+        <div class="card" style="min-width:160px">
+          <div class="small-muted">Pending</div>
+          <div id="statPending" style="font-weight:700;font-size:18px">0</div>
+        </div>
+        <div class="card" style="min-width:160px">
+          <div class="small-muted">Paid</div>
+          <div id="statPaid" style="font-weight:700;font-size:18px">0</div>
+        </div>
+        <div class="card" style="min-width:160px">
+          <div class="small-muted">Delivered</div>
+          <div id="statDelivered" style="font-weight:700;font-size:18px">0</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="filterSearch" class="input" placeholder="Search orders by name, phone, item..." />
+        <button id="refreshBtn" class="chip">Refresh</button>
+        <button id="clearBtn" class="chip">Clear All</button>
+        <button id="exportBtn" class="chip">Export JSON</button>
+        <input id="importFile" type="file" accept="application/json" style="display:none" />
+        <button id="importBtn" class="chip">Import JSON</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h3>Orders</h3>
+          <div id="ordersList"></div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card">
+          <h4>Quick Filters</h4>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="chip" data-filter="all">All</button>
+            <button class="chip" data-filter="pending">Pending</button>
+            <button class="chip" data-filter="paid">Paid</button>
+            <button class="chip" data-filter="delivered">Delivered</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4>Monthly Sales</h4>
+          <div><input id="reportMonth" type="month" class="input" /></div>
+          <div id="reportSummary" style="margin-top:8px"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="footer">Orders & data stored in browser localStorage for demo purposes.</div>
+</div>
+
+<script>
+// --- Keys & sample products (same as index)
+const KEY_ORDERS = 'fq_orders_v1';
+const KEY_MONTH = 'fq_month_sales_v1';
+const KEY_PRODUCTS = 'fq_products_v1';
+
+if(!localStorage.getItem(KEY_ORDERS)) localStorage.setItem(KEY_ORDERS, JSON.stringify([]));
+if(!localStorage.getItem(KEY_MONTH)) localStorage.setItem(KEY_MONTH, JSON.stringify({}));
+
+let orders = JSON.parse(localStorage.getItem(KEY_ORDERS));
+let monthSales = JSON.parse(localStorage.getItem(KEY_MONTH));
+let products = JSON.parse(localStorage.getItem(KEY_PRODUCTS) || '[]');
+
+// Admin credentials
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin123';
+
+// DOM
+const loginArea = document.getElementById('loginArea');
+const dashboard = document.getElementById('dashboard');
+const loginMsg = document.getElementById('loginMsg');
+const ordersList = document.getElementById('ordersList');
+const statTotal = document.getElementById('statTotal');
+const statPending = document.getElementById('statPending');
+const statPaid = document.getElementById('statPaid');
+const statDelivered = document.getElementById('statDelivered');
+
+const refreshBtn = document.getElementById('refreshBtn');
+const clearBtn = document.getElementById('clearBtn');
+const exportBtn = document.getElementById('exportBtn');
+const importBtn = document.getElementById('importBtn');
+const importFile = document.getElementById('importFile');
+const filterButtons = document.querySelectorAll('.chip[data-filter]');
+const filterSearch = document.getElementById('filterSearch');
+const reportMonthInput = document.getElementById('reportMonth');
+const reportSummary = document.getElementById('reportSummary');
+const logoutBtn = document.getElementById('logoutBtn');
+
+// Show login or dashboard depending on session
+const AUTH_KEY = 'fq_admin_auth';
+function showAppropriate(){
+  if(sessionStorage.getItem(AUTH_KEY) === 'true'){ loginArea.style.display='none'; dashboard.style.display='block'; refreshState(); }
+  else { loginArea.style.display='block'; dashboard.style.display='none'; }
+}
+showAppropriate();
+
+// Login
+document.getElementById('loginBtn').addEventListener('click', ()=>{
+  const u = document.getElementById('adminUser').value.trim();
+  const p = document.getElementById('adminPass').value.trim();
+  if(u===ADMIN_USER && p===ADMIN_PASS){ sessionStorage.setItem(AUTH_KEY,'true'); loginMsg.innerText=''; showAppropriate(); }
+  else { loginMsg.innerText = 'Invalid credentials'; }
+});
+logoutBtn.addEventListener('click', ()=> { sessionStorage.removeItem(AUTH_KEY); showAppropriate(); });
+
+// Utilities
+function saveOrders(){ localStorage.setItem(KEY_ORDERS, JSON.stringify(orders)); }
+function renderStats(){
+  statTotal.innerText = orders.length;
+  statPending.innerText = orders.filter(o=>o.status==='pending').length;
+  statPaid.innerText = orders.filter(o=>o.status==='paid').length;
+  statDelivered.innerText = orders.filter(o=>o.status==='delivered').length;
+}
+
+// Render orders (cards)
+let activeFilter = 'all';
+function renderOrders(){
+  ordersList.innerHTML = '';
+  const q = filterSearch.value.trim().toLowerCase();
+  const list = orders.filter(o=>{
+    if(activeFilter!=='all' && o.status!==activeFilter) return false;
+    if(!q) return true;
+    return (o.name||'').toLowerCase().includes(q) || (o.phone||'').toLowerCase().includes(q) ||
+      (o.items||[]).some(it => (it.title||'').toLowerCase().includes(q));
+  }).slice().reverse(); // newest first
+
+  if(list.length===0){ ordersList.innerHTML = '<div class="small-muted">No orders</div>'; return; }
+
+  list.forEach((o, idx)=>{
+    const card = document.createElement('div'); card.className='order-card';
+    const left = document.createElement('div'); left.className='order-left';
+    left.innerHTML = `<div><strong>${o.name}</strong> — ${new Date(o.date).toLocaleString()}</div>
+      <div class="small-muted">Phone: ${o.phone || ''}</div>
+      <div style="margin-top:8px">${(o.items||[]).map(it=>`<div>${it.title} x ${it.qty} — ₱${it.price}</div>`).join('')}</div>
+      <div style="margin-top:8px">Total: ₱${o.total}</div>`;
+
+    const right = document.createElement('div'); right.className='order-actions';
+    // status label
+    const statusLabel = document.createElement('div');
+    statusLabel.className = o.status==='paid' ? 'status-paid' : (o.status==='delivered' ? 'status-delivered' : 'status-pending');
+    statusLabel.innerText = (o.status||'pending').toUpperCase();
+    // status select
+    const statusSelect = document.createElement('select');
+    ['pending','paid','delivered'].forEach(s=>{
+      const opt = document.createElement('option'); opt.value = s; opt.text = s.charAt(0).toUpperCase()+s.slice(1);
+      if(o.status===s) opt.selected = true; statusSelect.appendChild(opt);
+    });
+    statusSelect.addEventListener('change', e=>{
+      o.status = e.target.value; saveOrders(); renderOrders(); renderStats();
+    });
+
+    // delete button
+    const delBtn = document.createElement('button'); delBtn.className='chip'; delBtn.innerText='Delete';
+    delBtn.addEventListener('click', ()=>{
+      if(confirm('Delete this order?')){ orders = orders.filter(x=>x.id!==o.id); saveOrders(); renderOrders(); renderStats(); }
+    });
+
+    // receipt preview
+    if(o.receipt){
+      const img = document.createElement('img'); img.src = o.receipt; img.alt='receipt'; img.className='upload-img';
+      right.appendChild(img);
+    }
+
+    right.appendChild(statusLabel);
+    right.appendChild(statusSelect);
+    right.appendChild(delBtn);
+
+    card.appendChild(left); card.appendChild(right);
+    ordersList.appendChild(card);
+  });
+}
+
+// refresh state
+function refreshState(){
+  orders = JSON.parse(localStorage.getItem(KEY_ORDERS) || '[]');
+  monthSales = JSON.parse(localStorage.getItem(KEY_MONTH) || '{}');
+  renderStats(); renderOrders(); renderReport();
+}
+
+// Filters and controls
+filterButtons.forEach(b=> b.addEventListener('click', ()=> { activeFilter = b.dataset.filter; renderOrders(); }));
+filterSearch.addEventListener('input', ()=> renderOrders());
+
+refreshBtn.addEventListener('click', ()=> refreshState());
+
+clearBtn.addEventListener('click', ()=>{
+  if(confirm('Clear all orders?')){ orders=[]; saveOrders(); renderOrders(); renderStats(); }
+});
+
+exportBtn.addEventListener('click', ()=>{
+  if(!orders.length){ alert('No orders'); return; }
+  const blob = new Blob([JSON.stringify(orders, null, 2)], {type:'application/json'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'orders.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+});
+
+importBtn.addEventListener('click', ()=> importFile.click());
+importFile.addEventListener('change', (e)=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader(); r.onload = ()=>{
+    try{
+      const imported = JSON.parse(r.result);
+      if(!Array.isArray(imported)) throw 'Invalid';
+      const existingIds = new Set(orders.map(o=>o.id));
+      const toAdd = imported.filter(o=>!existingIds.has(o.id));
+      orders = orders.concat(toAdd); saveOrders(); renderOrders(); renderStats(); alert(`Imported ${toAdd.length} orders`);
+    }catch(err){ alert('Import failed: '+err); }
+  }; r.readAsText(f);
+});
+
+// Monthly report
+reportMonthInput.addEventListener('change', ()=> renderReport(reportMonthInput.value));
+function renderReport(month){
+  const m = month || new Date().toISOString().slice(0,7);
+  reportSummary.innerHTML = '';
+  if(!monthSales[m] || Object.keys(monthSales[m]).length===0){ reportSummary.innerHTML='<div class="small-muted">No sales</div>'; return; }
+  const sorted = Object.entries(monthSales[m]).sort((a,b)=>b[1]-a[1]);
+  const ul = document.createElement('div');
+  sorted.forEach(([title,qty])=>{ const row = document.createElement('div'); row.innerText = `${title} — ${qty}`; ul.appendChild(row); });
+  reportSummary.appendChild(ul);
+}
+
+// initial
+refreshState();
+</script>
+</body>
+</html>
