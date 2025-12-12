@@ -211,29 +211,6 @@
     </div>
   </div>
 
-  <!-- Admin Login Modal -->
-<div id="adminLoginModal" class="modal-backdrop" aria-hidden="true">
-  <div class="modal">
-    <div class="content" style="max-width:400px">
-      <h3>Admin Login</h3>
-      <div class="field">
-        <label for="adminUser">Username</label>
-        <input id="adminUser" type="text" placeholder="Enter username" />
-      </div>
-      <div class="field">
-        <label for="adminPass">Password</label>
-        <input id="adminPass" type="password" placeholder="Enter password" />
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn" id="adminLoginBtn">Login</button>
-        <button class="chip" id="adminLoginCancel">Cancel</button>
-      </div>
-      <div id="adminLoginMsg" class="small-muted" style="margin-top:8px"></div>
-    </div>
-  </div>
-</div>
-
-
   <!-- Admin modal -->
  <h2>Admin — Orders</h2>
 <div>
@@ -484,36 +461,6 @@
       checkoutModal.style.display='none'; checkoutMsg.innerText=''; updateCartUI();
       alert('Order placed successfully!');
     }
-
-
-    // ---------- Admin Login ----------
-const adminLoginModal = document.getElementById('adminLoginModal');
-const adminLoginMsg = document.getElementById('adminLoginMsg');
-
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = '1234'; // demo password
-
-document.getElementById('openAdmin').addEventListener('click',()=>{
-  adminLoginModal.style.display='flex';
-});
-
-document.getElementById('adminLoginCancel').addEventListener('click',()=>{
-  adminLoginModal.style.display='none';
-  adminLoginMsg.innerText='';
-});
-
-document.getElementById('adminLoginBtn').addEventListener('click',()=>{
-  const u = document.getElementById('adminUser').value.trim();
-  const p = document.getElementById('adminPass').value.trim();
-  if(u===ADMIN_USER && p===ADMIN_PASS){
-    adminLoginModal.style.display='none';
-    adminLoginMsg.innerText='';
-    adminModal.style.display='block'; // show admin orders section
-    renderAdminOrders();
-  } else {
-    adminLoginMsg.innerText='Invalid username or password';
-  }
-});
 
 
 
