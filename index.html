@@ -4,111 +4,81 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Five Queens Jewelry</title>
-  <meta name="description" content="Five Queens Jewelry — demo e-commerce jewelry store with sales tracking and monthly best-seller report." />
-  <!-- GOOGLE FONTS FOR A MODERN LOOK -->
+  <meta name="description" content="Five Queens Jewelry — demo e-commerce jewelry store with shipping + payments (GCash/PayMaya) and admin order management." />
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --accent: #b76e79;
-      --muted: #6b6b6b;
-      --bg: #fffdfb;
-      --card: #ffffff;
-      --shadow: 0 6px 24px rgba(16,24,40,0.08);
-      --radius: 14px;
-      --max: 1100px;
-      --gap: 16px;
-      --nav-h: 64px;
+    :root{
+      --accent:#b76e79; --muted:#6b6b6b; --card:#fff; --shadow:0 6px 24px rgba(16,24,40,0.08);
+      --max:1100px; --gap:16px;
     }
-    * { box-sizing: border-box }
-    html, body { height: 100%; margin: 0; font-family: 'Inter', Arial, sans-serif; background: linear-gradient(180deg,#fff 0%, #fffdfb 100%);}
-    .container { max-width: var(--max); margin: 0 auto; padding: 18px }
-    a { color: inherit; text-decoration: none }
-    img { max-width: 100%; display: block }
-
-    header { position: sticky; top: 0; z-index: 40; background: rgba(255,255,255,0.96); backdrop-filter: blur(7px); box-shadow: var(--shadow) }
-    .nav { height: var(--nav-h); display: flex; align-items: center; gap: 14px; padding: 8px 18px }
-    .brand { display: flex; align-items: center; gap: 14px; font-weight: 700 }
-    .brand .logo { width:44px; height:44px; background: linear-gradient(135deg,#ffd6e0,#b76e79); border-radius: 10px; display:flex; align-items:center; justify-content:center; color:white; font-size: 18px }
-    .search { flex: 1; display: flex }
-    .search input { flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid #eee }
-    .icons { display: flex; gap: 8px; align-items: center }
-    .icon-btn { padding:8px 12px; border-radius:10px; border: 1px solid #eee; background: white; font-weight:600; cursor:pointer; transition:background .2s }
-    .icon-btn:hover { background: #f8e5e9 }
-
-    main { padding:18px }
-    .grid { display: grid; grid-template-columns: 320px 1fr; gap: var(--gap) }
-    @media(max-width:900px){ .grid { grid-template-columns:1fr; } .aside{order:2}}
-    .aside { background: var(--card); border-radius: 12px; padding: 12px; box-shadow: var(--shadow)}
-    .card { background: var(--card); border-radius: 12px; padding: 12px; box-shadow: var(--shadow); margin-bottom: 18px }
-
-    .products { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px }
-    @media(max-width:1100px){ .products { grid-template-columns: repeat(2,1fr) } }
-    @media(max-width:600px){ .products { grid-template-columns:1fr } }
-
-    .product { border-radius:12px; overflow:hidden; border:1px solid #f0eaea; background: linear-gradient(180deg,rgba(255,255,255,0.6),#fff);}
-    .product .image { height:220px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#fff,#fff7f9);}
-    .product .body { padding:12px }
-    .product h4 { margin:0 0 8px; font-size: 17px }
-    .price { font-weight:700; color:var(--accent); font-size:17px }
-    .meta { font-size:13px; color: var(--muted)}
-    .btn { display:inline-block; padding:8px 12px; border-radius:10px; border:0; background:var(--accent); color:white; cursor:pointer; font-weight:600 }
-    .chip { padding:7px 13px; border-radius:999px; border:1px solid #eee; background:#fff; cursor:pointer; margin:2px 2px; font-size:13px; font-weight:500; transition:background .2s }
-    .chip:hover { background: #f7e6ea }
-
-    /* Cart drawer & modal */
-    .cart-drawer { position: fixed; right:18px; bottom:18px; width:360px; max-width: calc(100% - 36px); border-radius: 14px; background: linear-gradient(180deg,#fff,#fffdfb); box-shadow:0 20px 50px rgba(10,10,10,0.09); padding:20px 18px; display:none; z-index:100; }
-    .cart-item { display:flex; gap:12px; align-items: center; padding:8px 0; border-bottom:1px dashed #f3eaea }
-    .cart-drawer .btn, .cart-drawer .chip { font-size:15px }
-
-    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.44); display:none; align-items:center; justify-content:center; padding:20px; z-index:500}
-    .modal { background:var(--card); border-radius:12px; max-width:900px; width:100%; box-shadow:var(--shadow); display: flex; gap: 12px; overflow: hidden }
-    .modal .left { flex: 1; padding: 18px; min-width:220px }
-    .modal .right { width:320px; padding:18px }
-
-    /* Admin/report */
-    .admin-row { display:flex; gap:8px; flex-wrap:wrap }
-    .muted { color: var(--muted); font-size:13px }
-    .center { text-align: center }
-
-    footer{padding:30px 0; text-align:center; color:var(--muted)}
-    footer .container { max-width: 650px }
-
-    /* Mobile */
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Inter',Arial,sans-serif;background:linear-gradient(180deg,#fff 0%, #fffdfb 100%)}
+    .container{max-width:var(--max);margin:0 auto;padding:18px}
+    header{position:sticky;top:0;background:rgba(255,255,255,0.96);backdrop-filter:blur(6px);box-shadow:var(--shadow);z-index:40}
+    .nav{height:64px;display:flex;align-items:center;gap:14px;padding:8px 18px}
+    .brand{display:flex;align-items:center;gap:14px;font-weight:700}
+    .logo{width:44px;height:44px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .search{flex:1}
+    .search input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #eee}
+    .icons{display:flex;gap:8px;align-items:center}
+    .icon-btn{padding:8px 12px;border-radius:10px;border:1px solid #eee;background:white;font-weight:600;cursor:pointer}
+    main{padding:18px}
+    .grid{display:grid;grid-template-columns:320px 1fr;gap:var(--gap)}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .aside{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow);margin-bottom:18px}
+    .products{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:1100px){.products{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){.products{grid-template-columns:1fr}}
+    .product{border-radius:12px;overflow:hidden;border:1px solid #f0eaea;background:linear-gradient(180deg,#fff,#fffdfb)}
+    .product .image{height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#fff7f9)}
+    .product .body{padding:12px}
+    .price{font-weight:700;color:var(--accent);font-size:17px}
+    .meta{font-size:13px;color:var(--muted)}
+    .btn{display:inline-block;padding:8px 12px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer;font-weight:600}
+    .chip{padding:7px 13px;border-radius:999px;border:1px solid #eee;background:#fff;cursor:pointer;margin:2px;font-size:13px}
+    .cart-drawer{position:fixed;right:18px;bottom:18px;width:360px;border-radius:14px;background:linear-gradient(180deg,#fff,#fffdfb);box-shadow:0 20px 50px rgba(10,10,10,0.09);padding:20px 18px;display:none;z-index:100}
+    .cart-item{display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px dashed #f3eaea}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.44);display:none;align-items:center;justify-content:center;padding:20px;z-index:500}
+    .modal{background:var(--card);border-radius:12px;max-width:920px;width:100%;box-shadow:var(--shadow);overflow:hidden}
+    .modal .content{padding:18px}
+    .muted{color:var(--muted);font-size:13px}
+    footer{padding:30px 0;text-align:center;color:var(--muted)}
     @media(max-width:600px){
-      header .nav { flex-direction:column; gap:18px }
-      .aside { padding:5px; }
-      .card { padding:8px; font-size:15px }
-      .modal { flex-direction:column; width:100%; }
-      .modal .right { width:100% }
-      .modal .left { min-width:unset }
+      header .nav{flex-direction:column;gap:12px}
+      .modal{width:96%}
     }
 
-    /* Hide scrollbars on modal */
-    .modal::-webkit-scrollbar,.cart-drawer::-webkit-scrollbar{display:none}
+    /* Checkout/small styles */
+    .field{margin-bottom:12px}
+    .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+    .field input[type="text"], .field input[type="tel"], .field textarea, .field input[type="file"]{width:100%;padding:10px;border-radius:8px;border:1px solid #eee}
+    .receipt-preview{max-width:100%;border-radius:8px;margin-top:8px;border:1px solid #eee}
+    .order-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #eee}
+    .status-pill{padding:6px 10px;border-radius:999px;font-weight:600}
+    .status-pending{background:#fff3f3;color:#b76e79;border:1px solid #f2cbd1}
+    .status-paid{background:#f3fff8;color:#1b8f4a;border:1px solid #c8efd7}
+    .status-delivered{background:#f3f7ff;color:#1b4db8;border:1px solid #d7e3ff}
+    .small-muted{font-size:12px;color:var(--muted)}
+    .btn-sm{padding:6px 8px;border-radius:8px;font-size:13px}
   </style>
 </head>
 <body>
   <header>
     <div class="nav container">
       <div class="brand">
-        
-        <!-- LOGO IMAGE HERE -->
-        <div class="logo" style="background:none; padding:0;">
-          <img src="logo.png" alt="Five Queens Logo" 
-            style="width:44px; height:44px; border-radius:12px; object-fit:cover;">
-        </div>
-        
+        <div class="logo"><img src="logo.png" alt="logo" style="width:44px;height:44px;object-fit:cover"></div>
         <div>
           <div style="font-size:15px">Five Queens Jewelry</div>
           <div style="font-size:12px;color:var(--muted)">Shine With the Elegance of a Queen</div>
         </div>
       </div>
-      
-      <div class="search">
-        <input id="searchInput" placeholder=" " />
-      </div>
-    </div>
 
+      <div class="search" style="margin-left:8px">
+        <input id="searchInput" placeholder="Search products..." />
+      </div>
+
+      <div style="flex:0 0 auto"></div>
       <div class="icons">
         <div class="icon-btn" id="openAdmin">Admin</div>
         <div class="icon-btn" id="openReport">Monthly Best</div>
@@ -130,6 +100,7 @@
         </div>
 
         <div style="height:16px"></div>
+
         <div class="card">
           <h3>Cart Summary</h3>
           <div id="cartSummary">No items yet.</div>
@@ -141,15 +112,16 @@
       <section>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <h2>Featured</h2>
-          <div class="muted"> <br> Wear your confidence. Wear your crown. </br> </div>
+          <div class="muted">Wear your confidence. Wear your crown.</div>
         </div>
+
         <div id="products" class="products"></div>
       </section>
     </div>
   </main>
 
   <!-- Cart drawer -->
-  <div id="cartDrawer" class="cart-drawer">
+  <div id="cartDrawer" class="cart-drawer" aria-hidden="true">
     <h3>Cart</h3>
     <div id="cartItems"></div>
     <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
@@ -158,65 +130,126 @@
     </div>
   </div>
 
-  <!-- Modal for product view -->
+  <!-- Product modal (quick view) -->
   <div id="modalBackdrop" class="modal-backdrop">
     <div class="modal">
-      <div class="left">
+      <div class="content" style="display:grid;grid-template-columns:1fr;gap:12px">
         <div id="modalImage" style="height:320px;background:linear-gradient(180deg,#fff,#fff7f9);display:flex;align-items:center;justify-content:center"></div>
-      </div>
-      <div class="right">
-        <h3 id="modalTitle"></h3>
-        <div class="price" id="modalPrice"></div>
-        <div class="meta" id="modalCategory"></div>
-        <p id="modalDesc" class="muted"></p>
-        <div style="height:12px"></div>
-        <div style="display:flex;gap:8px">
-          <input id="qty" type="number" value="1" min="1" style="width:70px;padding:8px;border-radius:8px;border:1px solid #eee" />
-          <button class="btn" id="addToCartBtn">Add to cart</button>
+        <div>
+          <h3 id="modalTitle"></h3>
+          <div class="price" id="modalPrice"></div>
+          <div class="meta" id="modalCategory"></div>
+          <p id="modalDesc" class="muted"></p>
+          <div style="height:12px"></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="qty" type="number" value="1" min="1" style="width:80px;padding:8px;border-radius:8px;border:1px solid #eee" />
+            <button class="btn" id="addToCartBtn">Add to cart</button>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout modal (single-column mobile-friendly) -->
+  <div id="checkoutModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal">
+      <div class="content">
+        <h3>Checkout</h3>
+
+        <div id="checkoutItems" style="max-height:220px;overflow:auto;margin-bottom:8px"></div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>Subtotal</div><div>₱<span id="checkoutSubtotal">0</span></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>Shipping</div><div>₱<span id="checkoutShipping">50</span></div>
+        </div>
+        <hr />
+
+        <div class="field">
+          <label for="shipName">Full name</label>
+          <input id="shipName" type="text" placeholder="Juan dela Cruz"/>
+        </div>
+        <div class="field">
+          <label for="shipPhone">Phone number</label>
+          <input id="shipPhone" type="tel" placeholder="09XXXXXXXXX" />
+        </div>
+        <div class="field">
+          <label for="shipAddress">Shipping address</label>
+          <textarea id="shipAddress" rows="3" placeholder="House no, street, barangay, city, province, zip"></textarea>
+        </div>
+
+        <div class="field">
+          <label>Payment method</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <label><input name="pay" type="radio" value="cod" checked /> Cash on Delivery</label>
+            <label><input name="pay" type="radio" value="gcash" /> GCash (upload + ref #)</label>
+            <label><input name="pay" type="radio" value="paymaya" /> PayMaya (upload + ref #)</label>
+          </div>
+          <div class="small-muted">For GCash / PayMaya please upload the payment screenshot and add the reference number.</div>
+        </div>
+
+        <div id="receiptFields" style="display:none">
+          <div class="field">
+            <label for="payRef">Payment Reference Number</label>
+            <input id="payRef" type="text" placeholder="e.g. GCS-12345678 or PayMaya ref" />
+          </div>
+          <div class="field">
+            <label for="receiptFile">Upload payment screenshot</label>
+            <input id="receiptFile" type="file" accept="image/*"/>
+            <img id="receiptPreview" class="receipt-preview" style="display:none" alt="receipt preview" />
+          </div>
+        </div>
+
+        <div id="checkoutMsg" class="muted small-muted" style="margin-bottom:8px"></div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" id="submitCheckout">Place Order</button>
+          <button class="chip" id="cancelCheckout">Cancel</button>
+        </div>
+
+        <div style="height:8px"></div>
       </div>
     </div>
   </div>
 
   <!-- Admin modal -->
   <div id="adminModal" class="modal-backdrop">
-    <div class="modal" style="max-width:900px;">
-      <div class="left" style="flex:1">
-        <h3>Admin — Record Sales</h3>
-        <p class="muted">Simulate orders and track monthly sales counts. Data is stored in your browser (localStorage).</p>
-        <label>Pick product</label>
-        <select id="adminProduct" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eee"></select>
-        <div style="height:8px"></div>
-        <label>Quantity</label>
-        <input id="adminQty" type="number" value="1" min="1" style="width:120px;padding:8px;border-radius:8px;border:1px solid #eee" />
-        <div style="height:8px"></div>
-        <label>Month (YYYY-MM)</label>
-        <input id="adminMonth" type="month" style="padding:8px;border-radius:8px;border:1px solid #eee" />
-        <div style="height:10px"></div>
-        <button class="btn" id="recordSale">Record Sale</button>
+    <div class="modal">
+      <div class="content">
+        <h3>Admin — Orders</h3>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <button class="chip" id="refreshAdmin">Refresh</button>
+          <button class="chip" id="clearOrders">Clear All Orders</button>
+        </div>
+
+        <div id="adminOrdersList" style="max-height:420px;overflow:auto"></div>
+
         <div style="height:12px"></div>
-        <h4>Recent simulated orders</h4>
-        <div id="adminOrders"></div>
-      </div>
-      <div class="right">
-        <h3>Tools</h3>
-        <button class="chip" id="resetData">Reset All Data</button>
-        <button class="chip" id="exportData">Export JSON</button>
-        <div class="muted">Exported JSON contains products, orders and monthly sales counts.</div>
+        <h4>Export / Import</h4>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn" id="exportData">Export JSON</button>
+          <input id="importFile" type="file" accept="application/json" />
+        </div>
+
+        <div style="height:8px"></div>
+        <button class="chip" id="closeAdmin">Close</button>
       </div>
     </div>
   </div>
 
   <!-- Report modal -->
   <div id="reportModal" class="modal-backdrop">
-    <div class="modal" style="max-width:900px;">
-      <div style="padding:18px;width:100%">
+    <div class="modal">
+      <div class="content">
         <h3>Monthly Best Sellers</h3>
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
           <label>Choose month</label>
           <input id="reportMonth" type="month" />
         </div>
         <div id="reportContent"></div>
+        <div style="height:12px"></div>
+        <button class="chip" id="closeReport">Close</button>
       </div>
     </div>
   </div>
@@ -224,55 +257,99 @@
   <footer>
     <div class="container">
       <div style="font-weight:700">Five Queens Jewelry</div>
-      <div class="muted">Demo storefront — not connected to live payment gateways. Sales data stored in browser for demo and reporting purposes.</div>
+      <div class="muted">Demo storefront — orders & receipts stored in browser localStorage for demo/admin use.</div>
     </div>
   </footer>
 
   <script>
-    // --- Demo product list
+    // ---------- Demo products ----------
     const demoProducts = [
       {id:'p1',title:'Royal Pearl Necklace',price:2599,cat:'necklaces',desc:'Freshwater pearl necklace with rose-gold plating.',img:'royal-pearl-necklace.jpg'},
       {id:'p2',title:'Queens Halo Ring',price:1899,cat:'rings',desc:'Cubic zirconia halo ring inspired by royal crowns.',img:'queens-halo-ring.png'},
       {id:'p3',title:'Luxe Pearl Studs',price:799,cat:'earrings',desc:'Minimal pearl studs with secure backs.',img:'luxe-pearl-studs.png'},
       {id:'p4',title:'Rose Gold Bangle',price:1299,cat:'bracelets',desc:'Slim bangle with hammered finish.',img:'rose-gold-bangle.png'},
-      {id:'p5',title:'Emerald Drop Earrings',price:2199,cat:'earrings',desc:'Emerald-simulated drop earrings for evening wear.',img:'Emerald Drop Earrings.png'},
-      {id:'p6',title:'Silver Minimalist Ring',price:699,cat:'rings',desc:'Everyday silver band, polished finish.',img:'Silver Minimalist Ring.png'},
-      {id:'p7',title:'Amethyst Pendant',price:1499,cat:'necklaces',desc:'Purple amethyst pendant on delicate chain.',img:'Amethyst Pendant.jpg'},
-      {id:'p8',title:'Stackable Ring Set',price:1199,cat:'rings',desc:'Three stackable rings in mixed metals.',img:'Stackable Ring Set.png '},
+      {id:'p5',title:'Emerald Drop Earrings',price:2199,cat:'earrings',desc:'Emerald-simulated drop earrings for evening wear.',img:'emerald-drop-earrings.png'},
+      {id:'p6',title:'Silver Minimalist Ring',price:699,cat:'rings',desc:'Everyday silver band, polished finish.',img:'silver-minimalist-ring.png'},
+      {id:'p7',title:'Amethyst Pendant',price:1499,cat:'necklaces',desc:'Purple amethyst pendant on delicate chain.',img:'amethyst-pendant.jpg'},
+      {id:'p8',title:'Stackable Ring Set',price:1199,cat:'rings',desc:'Three stackable rings in mixed metals.',img:'stackable-ring-set.png'},
+    ];
 
-    // LOCAL STORAGE KEYS
+    // ---------- Local storage keys ----------
     const KEY_PRODUCTS = 'fq_products_v1';
     const KEY_ORDERS = 'fq_orders_v1';
-    const KEY_MONTH_SALES = 'fq_month_sales_v1';
+    const KEY_MONTH = 'fq_month_sales_v1';
+    const KEY_CART = 'fq_cart_demo_v1';
 
-    // --- Helpers
+    // ---------- Helpers ----------
     function money(n){ return Number(n).toLocaleString('en-PH') }
     function uid(len=8){ return Math.random().toString(36).slice(2,2+len) }
-    function save(key,val){ localStorage.setItem(key,JSON.stringify(val)) }
-    function load(key,def){ try{ return JSON.parse(localStorage.getItem(key))||def } catch(e){ return def } }
+    function save(key,val){ localStorage.setItem(key, JSON.stringify(val)) }
+    function load(key,def){ try{ return JSON.parse(localStorage.getItem(key))||def }catch(e){return def} }
 
-    // --- Data setup
-    function initData(){
-      if(!localStorage.getItem(KEY_PRODUCTS)) save(KEY_PRODUCTS, demoProducts);
-      if(!localStorage.getItem(KEY_ORDERS)) save(KEY_ORDERS, []);
-      if(!localStorage.getItem(KEY_MONTH_SALES)) save(KEY_MONTH_SALES, {});
-    }
-    initData();
+    // ---------- Data init ----------
+    if(!localStorage.getItem(KEY_PRODUCTS)) save(KEY_PRODUCTS, demoProducts);
+    if(!localStorage.getItem(KEY_ORDERS)) save(KEY_ORDERS, []);
+    if(!localStorage.getItem(KEY_MONTH)) save(KEY_MONTH, {});
+    if(!localStorage.getItem(KEY_CART)) save(KEY_CART, {});
 
     let dataProducts = load(KEY_PRODUCTS, demoProducts);
-    let orders      = load(KEY_ORDERS, []);
-    let monthSales  = load(KEY_MONTH_SALES, {});
+    let orders = load(KEY_ORDERS, []);
+    let monthSales = load(KEY_MONTH, {});
+    let cart = load(KEY_CART, {});
 
-    // --- Product rendering
-    const productsEl   = document.getElementById('products');
-    const searchInput  = document.getElementById('searchInput');
+    // ---------- DOM refs ----------
+    const productsEl = document.getElementById('products');
+    const searchInput = document.getElementById('searchInput');
+    const cartCount = document.getElementById('cartCount');
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+    const cartSummary = document.getElementById('cartSummary');
+    const buyNowBtn = document.getElementById('buyNow');
+    const checkoutBtn = document.getElementById('checkoutBtn');
 
-    function renderProducts(filterCat='all',q=''){
+    // Checkout refs
+    const checkoutModal = document.getElementById('checkoutModal');
+    const checkoutItems = document.getElementById('checkoutItems');
+    const checkoutSubtotal = document.getElementById('checkoutSubtotal');
+    const checkoutShipping = document.getElementById('checkoutShipping');
+    const submitCheckout = document.getElementById('submitCheckout');
+    const cancelCheckout = document.getElementById('cancelCheckout');
+    const shipName = document.getElementById('shipName');
+    const shipPhone = document.getElementById('shipPhone');
+    const shipAddress = document.getElementById('shipAddress');
+    const receiptFields = document.getElementById('receiptFields');
+    const receiptFile = document.getElementById('receiptFile');
+    const receiptPreview = document.getElementById('receiptPreview');
+    const payRef = document.getElementById('payRef');
+    const checkoutMsg = document.getElementById('checkoutMsg');
+
+    const checkoutShippingFee = 50;
+
+    // Admin refs
+    const adminModal = document.getElementById('adminModal');
+    const openAdmin = document.getElementById('openAdmin');
+    const adminOrdersList = document.getElementById('adminOrdersList');
+    const refreshAdmin = document.getElementById('refreshAdmin');
+    const clearOrdersBtn = document.getElementById('clearOrders');
+    const exportDataBtn = document.getElementById('exportData');
+    const importFile = document.getElementById('importFile');
+    const closeAdmin = document.getElementById('closeAdmin');
+
+    // Report refs
+    const reportModal = document.getElementById('reportModal');
+    const openReport = document.getElementById('openReport');
+    const reportMonth = document.getElementById('reportMonth');
+    const reportContent = document.getElementById('reportContent');
+    const closeReport = document.getElementById('closeReport');
+
+    // ---------- Render products ----------
+    function renderProducts(filter='all', q=''){
       productsEl.innerHTML = '';
       const qlow = q.trim().toLowerCase();
       const list = dataProducts.filter(p=>{
-        if(filterCat!=='all' && p.cat!==filterCat) return false;
-        if(qlow && !(p.title.toLowerCase().includes(qlow)||p.desc.toLowerCase().includes(qlow))) return false;
+        if(filter!=='all' && p.cat !== filter) return false;
+        if(qlow && !(p.title.toLowerCase().includes(qlow) || p.desc.toLowerCase().includes(qlow))) return false;
         return true;
       });
       if(!list.length){
@@ -289,9 +366,10 @@
             <div style="height:8px"></div>
             <div class="price">₱${money(p.price)}</div>
             <div style="height:10px"></div>
-            <div style="display:flex;gap:8px">
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
               <button class="btn" onclick="openModal('${p.id}')">Quick view</button>
-              <button class="chip" onclick="recordQuickSale('${p.id}',1)">Buy 1 (demo)</button>
+              <button class="chip" onclick="recordQuickSale('${p.id}',1)">Buy 1</button>
+              <button class="btn" onclick="addCart('${p.id}',1)">Add to Cart</button>
             </div>
           </div>
         `;
@@ -300,20 +378,19 @@
     }
     renderProducts();
 
-    document.querySelectorAll('.chip[data-cat]').forEach(ch=>ch.addEventListener('click',e=>{
-      const cat = ch.dataset.cat;
-      renderProducts(cat, searchInput.value);
+    document.querySelectorAll('.chip[data-cat]').forEach(ch=>ch.addEventListener('click',()=>{
+      renderProducts(ch.dataset.cat, searchInput.value);
     }));
-    searchInput.addEventListener('input',e=>renderProducts('all', e.target.value));
+    searchInput.addEventListener('input', e=>renderProducts('all', e.target.value));
 
-    // --- Modal product view
-    const modalBackdrop  = document.getElementById('modalBackdrop');
-    const modalTitle     = document.getElementById('modalTitle');
-    const modalPrice     = document.getElementById('modalPrice');
-    const modalDesc      = document.getElementById('modalDesc');
-    const modalCategory  = document.getElementById('modalCategory');
-    const modalImage     = document.getElementById('modalImage');
-    const addToCartBtn   = document.getElementById('addToCartBtn');
+    // ---------- Modal product view ----------
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalCategory = document.getElementById('modalCategory');
+    const modalImage = document.getElementById('modalImage');
+    const addToCartBtn = document.getElementById('addToCartBtn');
     let currentModalProduct = null;
 
     window.openModal = function(id){
@@ -323,40 +400,35 @@
       modalPrice.textContent = '₱'+money(p.price);
       modalDesc.textContent = p.desc;
       modalCategory.textContent = p.cat.charAt(0).toUpperCase()+p.cat.slice(1);
-      modalImage.innerHTML   = `<img src="${p.img}" alt="${p.title}" style="max-height:320px;object-fit:cover">`;
+      modalImage.innerHTML = `<img src="${p.img}" alt="${p.title}" style="max-height:320px;object-fit:cover">`;
       modalBackdrop.style.display = 'flex';
       document.getElementById('qty').value = 1;
-    }
-    modalBackdrop.addEventListener('click',e=>{ if(e.target===modalBackdrop) modalBackdrop.style.display='none' })
+    };
+    modalBackdrop.addEventListener('click', e=>{ if(e.target===modalBackdrop) modalBackdrop.style.display='none' });
 
-    addToCartBtn.addEventListener('click',()=>{
+    addToCartBtn.addEventListener('click', ()=>{
       const qty = Number(document.getElementById('qty').value) || 1;
       addCart(currentModalProduct.id, qty);
-      modalBackdrop.style.display='none';
+      modalBackdrop.style.display = 'none';
     });
 
-    // --- Cart logic
-    let cart = load('fq_cart_demo_v1', {});
-    const cartCount  = document.getElementById('cartCount');
-    const cartDrawer = document.getElementById('cartDrawer');
-    const cartItems  = document.getElementById('cartItems');
-    const cartTotalEl = document.getElementById('cartTotal');
-    const cartSummary = document.getElementById('cartSummary');
-
-    function saveCart(){ localStorage.setItem('fq_cart_demo_v1', JSON.stringify(cart)); updateCartUI(); }
+    // ---------- Cart logic ----------
+    function saveCart(){ save(KEY_CART, cart); updateCartUI(); }
     function updateCartUI(){
       const keys = Object.keys(cart);
-      let total = 0, count = 0;
       cartItems.innerHTML = '';
+      let total = 0, count = 0;
       keys.forEach(id=>{
-        const p = dataProducts.find(x=>x.id===id);
-        if(!p) return;
+        const p = dataProducts.find(x=>x.id===id); if(!p) return;
         const qty = cart[id].qty;
         const el = document.createElement('div'); el.className='cart-item';
         el.innerHTML = `
           <div style="width:56px;height:56px;overflow:hidden;border-radius:10px"><img src="${p.img}" alt="" style="width:100%;height:100%;object-fit:cover"/></div>
           <div style="flex:1"><div style="font-weight:600">${p.title}</div><div class="muted">₱${money(p.price)} • x ${qty}</div></div>
-          <div><button class="chip" onclick="changeQty('${id}',-1)">-</button><button class="chip" onclick="changeQty('${id}',1)">+</button></div>`;
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button class="chip" onclick="changeQty('${id}',-1)">-</button>
+            <button class="chip" onclick="changeQty('${id}',1)">+</button>
+          </div>`;
         cartItems.appendChild(el);
         total += p.price * qty; count += qty;
       });
@@ -364,11 +436,10 @@
       cartTotalEl.textContent = money(total);
       cartSummary.innerHTML = keys.length ? `${count} items • ₱${money(total)}` : 'No items yet.';
     }
-
     function changeQty(id,delta){
       if(!cart[id]) return;
       cart[id].qty += delta;
-      if(cart[id].qty<=0) delete cart[id];
+      if(cart[id].qty <= 0) delete cart[id];
       saveCart();
     }
     window.changeQty = changeQty;
@@ -380,152 +451,338 @@
       alert('Added to cart');
     }
 
-    window.openCart = function(){
-      cartDrawer.style.display = cartDrawer.style.display === 'none' ? 'block' : 'none';
-      updateCartUI();
-    }
+    window.openCart = function(){ cartDrawer.style.display = cartDrawer.style.display === 'none' ? 'block' : 'none'; updateCartUI(); };
     document.getElementById('openCartBtn').addEventListener('click', openCart);
 
-    document.getElementById('buyNow').addEventListener('click',()=>{
-      const keys = Object.keys(cart); if(!keys.length){alert('Cart empty'); return;}
-      const today = new Date(); const monthKey = today.toISOString().slice(0,7);
+    // ---------- Buy Now (cart -> checkout) ----------
+    buyNowBtn.addEventListener('click', ()=>{
+      const keys = Object.keys(cart); if(!keys.length){ alert('Cart empty'); return; }
+      openCheckout();
+    });
+    checkoutBtn.addEventListener('click', ()=>{ openCart(); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}); });
+
+    // ---------- Checkout flow ----------
+    function openCheckout(){
+      renderCheckoutSummary();
+      checkoutMsg.textContent = '';
+      receiptPreview.style.display = 'none';
+      receiptFile.value = '';
+      payRef.value = '';
+      // default payment cod
+      document.querySelectorAll('input[name="pay"]').forEach(r=>r.checked = r.value === 'cod');
+      receiptFields.style.display = 'none';
+      checkoutModal.style.display = 'flex';
+      shipName.focus();
+    }
+
+    cancelCheckout.addEventListener('click', ()=> checkoutModal.style.display = 'none');
+
+    function renderCheckoutSummary(){
+      const keys = Object.keys(cart);
+      checkoutItems.innerHTML = '';
+      let subtotal = 0;
       keys.forEach(id=>{
-        monthSales[monthKey] = monthSales[monthKey] || {};
-        monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + cart[id].qty;
-        orders.push({id:uid(6),productId:id,qty:cart[id].qty,month:monthKey,created:new Date().toISOString()});
+        const p = dataProducts.find(x=>x.id===id); if(!p) return;
+        const qty = cart[id].qty;
+        subtotal += p.price * qty;
+        const d = document.createElement('div'); d.className='order-row';
+        d.innerHTML = `<div>${p.title} x ${qty}</div><div>₱${money(p.price * qty)}</div>`;
+        checkoutItems.appendChild(d);
       });
-      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
-      cart = {}; saveCart(); cartDrawer.style.display='none';
-      alert('Thank you! Your demo order placed for '+monthKey);
-    });
-
-    document.getElementById('checkoutBtn').addEventListener('click',()=>{
-      openCart(); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})
-    });
-
-    updateCartUI();
-
-    // --- Quick buy for demo product card
-    window.recordQuickSale = function(id,q){
-      const today = new Date();
-      const monthKey = today.toISOString().slice(0,7);
-      monthSales[monthKey] = monthSales[monthKey] || {};
-      monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + q;
-      orders.push({id:uid(6),productId:id,qty:q,month:monthKey,created:new Date().toISOString()});
-      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
-      alert('Demo purchase recorded for '+monthKey);
+      checkoutSubtotal.textContent = money(subtotal);
+      checkoutShipping.textContent = money(checkoutShippingFee);
     }
 
-    // --- Admin Modal for recording sales
-    const adminModal   = document.getElementById('adminModal');
-    const openAdmin    = document.getElementById('openAdmin');
-    const adminProduct = document.getElementById('adminProduct');
-    const recordSaleBtn= document.getElementById('recordSale');
-    const adminOrders  = document.getElementById('adminOrders');
-    function refreshAdminProducts(){
-      adminProduct.innerHTML = '';
-      dataProducts.forEach(p=>{
-        const o = document.createElement('option');
-        o.value=p.id; o.textContent=`${p.title} (₱${money(p.price)})`;
-        adminProduct.appendChild(o);
+    // Payment selection logic (show receipt fields for gcash/paymaya)
+    document.querySelectorAll('input[name="pay"]').forEach(r=>{
+      r.addEventListener('change', ()=>{
+        const val = document.querySelector('input[name="pay"]:checked').value;
+        if(val === 'gcash' || val === 'paymaya'){
+          receiptFields.style.display = 'block';
+        } else {
+          receiptFields.style.display = 'none';
+        }
       });
-    }
-    refreshAdminProducts();
-
-    openAdmin.addEventListener('click',()=>{ adminModal.style.display='flex'; renderAdminOrders(); document.getElementById('adminMonth').value = new Date().toISOString().slice(0,7) });
-    adminModal.addEventListener('click',e=>{ if(e.target===adminModal) adminModal.style.display='none' })
-
-    recordSaleBtn.addEventListener('click',()=>{
-      const id    = adminProduct.value;
-      const qty   = Number(document.getElementById('adminQty').value)||1;
-      const month = document.getElementById('adminMonth').value;
-      if(!month){alert('Pick month');return}
-      monthSales[month] = monthSales[month] || {};
-      monthSales[month][id] = (monthSales[month][id]||0) + qty;
-      orders.push({id:uid(6),productId:id,qty:qty,month:month,created:new Date().toISOString()});
-      save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales);
-      renderAdminOrders(); alert('Recorded');
     });
 
-    function renderAdminOrders(){
-      adminOrders.innerHTML = '';
-      const recent = orders.slice(-10).reverse();
-      if(!recent.length){
-        adminOrders.innerHTML = `<div class="muted">No orders yet.</div>`;
+    // file -> preview + store data url on preview element dataset
+    function readFileToDataURL(file){
+      return new Promise((res, rej)=>{
+        const r = new FileReader();
+        r.onload = e => res(e.target.result);
+        r.onerror = e => rej(e);
+        r.readAsDataURL(file);
+      });
+    }
+    receiptFile.addEventListener('change', async (e)=>{
+      const f = e.target.files[0];
+      if(!f) return;
+      try{
+        const dataUrl = await readFileToDataURL(f);
+        receiptPreview.src = dataUrl;
+        receiptPreview.style.display = 'block';
+        receiptPreview.dataset.data = dataUrl;
+      } catch(err){ console.error(err) }
+    });
+
+    submitCheckout.addEventListener('click', async ()=>{
+      const name = shipName.value.trim();
+      const phone = shipPhone.value.trim();
+      const addr = shipAddress.value.trim();
+      const pay = document.querySelector('input[name="pay"]:checked').value;
+
+      if(!name){ alert('Please enter full name'); shipName.focus(); return; }
+      if(!phone){ alert('Please enter phone number'); shipPhone.focus(); return; }
+      if(!addr){ alert('Please enter shipping address'); shipAddress.focus(); return; }
+
+      if(pay === 'gcash' || pay === 'paymaya'){
+        const ref = (payRef.value || '').trim();
+        const dataUrl = receiptPreview.dataset.data;
+        if(!ref){ alert('Please enter payment reference number'); payRef.focus(); return; }
+        if(!dataUrl){ alert('Please upload payment screenshot'); receiptFile.focus(); return; }
+        placeOrder({
+          paymentMethod: pay,
+          paymentStatus: 'awaiting_verification',
+          paymentRef: ref,
+          receiptDataUrl: dataUrl
+        });
+        checkoutMsg.textContent = 'Uploaded receipt. Order placed and awaiting verification.';
+        setTimeout(()=> { checkoutModal.style.display = 'none'; }, 700);
         return;
       }
-      recent.forEach(o=>{
-        const p = dataProducts.find(x=>x.id===o.productId)||{title:o.productId};
-        const d = document.createElement('div'); d.className='muted'; d.style.padding='6px 0'; d.textContent = `${o.created.split('T')[0]} — ${p.title} x ${o.qty} (${o.month})`;
-        adminOrders.appendChild(d);
-      });
-    }
-    document.getElementById('resetData').addEventListener('click',()=>{
-      if(confirm('Reset demo data? This clears orders and sales counts, but not products.')){
-        orders=[]; monthSales={}; save(KEY_ORDERS,orders); save(KEY_MONTH_SALES,monthSales); renderAdminOrders(); alert('Reset');
+
+      if(pay === 'cod'){
+        placeOrder({
+          paymentMethod: 'cod',
+          paymentStatus: 'pending'
+        });
+        checkoutMsg.textContent = 'Order placed. Pay on delivery.';
+        setTimeout(()=> { checkoutModal.style.display = 'none'; }, 700);
+        return;
       }
     });
-    document.getElementById('exportData').addEventListener('click',()=>{
-      const blob = new Blob([JSON.stringify({products:dataProducts,orders:orders,monthSales:monthSales},null,2)],{type:'application/json'});
+
+    // ---------- Place order and update month sales ----------
+    function placeOrder(extra){
+      const keys = Object.keys(cart); if(!keys.length){ alert('Cart empty'); return; }
+      const now = new Date();
+      const monthKey = now.toISOString().slice(0,7);
+      let subtotal = 0;
+      const items = keys.map(id=>{
+        const p = dataProducts.find(x=>x.id===id) || {title:id,price:0};
+        const qty = cart[id].qty;
+        subtotal += p.price * qty;
+        // update month sales
+        monthSales[monthKey] = monthSales[monthKey] || {};
+        monthSales[monthKey][id] = (monthSales[monthKey][id]||0) + qty;
+        return {productId:id,title:p.title,price:p.price,qty};
+      });
+
+      const order = {
+        id: uid(10),
+        created: now.toISOString(),
+        month: monthKey,
+        shipping: {
+          name: shipName.value.trim(),
+          phone: shipPhone.value.trim(),
+          address: shipAddress.value.trim()
+        },
+        items,
+        subtotal,
+        shippingFee: checkoutShippingFee,
+        total: subtotal + checkoutShippingFee,
+        ...extra
+      };
+
+      orders.push(order);
+      save(KEY_ORDERS, orders);
+      save(KEY_MONTH, monthSales);
+
+      // clear cart
+      cart = {}; saveCart();
+      updateCartUI();
+      renderAdminOrders();
+      renderReport();
+
+      alert(`Order placed — ref ${order.id} • Status: ${order.paymentStatus || 'pending'}`);
+      return order;
+    }
+
+    // ---------- Quick buy (demo) ----------
+    window.recordQuickSale = function(id,q){
+      const now = new Date(); const monthKey = now.toISOString().slice(0,7);
+      monthSales[monthKey] = monthSales[monthKey] || {};
+      monthSales[monthKey][id] = (monthSales[monthKey][id] || 0) + q;
+      orders.push({ id: uid(6), productId:id, qty:q, month:monthKey, created: new Date().toISOString(), paymentMethod:'demo', paymentStatus:'paid' });
+      save(KEY_ORDERS, orders); save(KEY_MONTH, monthSales);
+      alert('Demo purchase recorded for '+monthKey);
+      renderReport();
+    };
+
+    // ---------- Admin: render orders and actions ----------
+    function renderAdminOrders(){
+      adminOrdersList.innerHTML = '';
+      if(!orders.length){
+        adminOrdersList.innerHTML = `<div class="muted">No orders yet.</div>`; return;
+      }
+      // newest first
+      const recent = orders.slice().reverse();
+      recent.forEach(o=>{
+        const wrapper = document.createElement('div'); wrapper.style.padding='8px 0';
+        // Order header
+        const header = document.createElement('div'); header.style.display='flex'; header.style.justifyContent='space-between'; header.style.alignItems='center';
+        const left = document.createElement('div'); left.innerHTML = `<div style="font-weight:700">${o.shipping ? o.shipping.name : '—'}</div><div class="small-muted">${(o.created||'').split('T')[0]} • Ref ${o.id}</div>`;
+        const right = document.createElement('div');
+        // status pill
+        const status = o.paymentStatus || (o.paymentMethod==='cod' ? 'pending' : 'pending');
+        const pill = document.createElement('span'); pill.className = 'status-pill ' + (status==='paid' ? 'status-paid' : status==='delivered' ? 'status-delivered' : 'status-pending');
+        pill.textContent = status.toUpperCase();
+        right.appendChild(pill);
+        header.appendChild(left); header.appendChild(right);
+        wrapper.appendChild(header);
+
+        // items
+        const itemsDiv = document.createElement('div'); itemsDiv.style.marginTop='8px';
+        (o.items || []).forEach(it=>{
+          const itRow = document.createElement('div'); itRow.className='order-row';
+          itRow.innerHTML = `<div>${it.title} x ${it.qty}</div><div>₱${money(it.price * it.qty)}</div>`;
+          itemsDiv.appendChild(itRow);
+        });
+        wrapper.appendChild(itemsDiv);
+
+        // totals & shipping
+        const totals = document.createElement('div'); totals.style.marginTop='8px';
+        totals.innerHTML = `<div class="small-muted">Subtotal ₱${money(o.subtotal||0)} • Shipping ₱${money(o.shippingFee||0)} • <strong>₱${money(o.total||0)}</strong></div>`;
+        wrapper.appendChild(totals);
+
+        // payment & receipt info
+        const payInfo = document.createElement('div'); payInfo.style.marginTop='8px';
+        payInfo.innerHTML = `<div class="small-muted">Payment: ${o.paymentMethod || 'N/A'} • Ref: ${(o.paymentRef||'—')}</div>`;
+        if(o.receiptDataUrl){
+          const r = document.createElement('img'); r.src = o.receiptDataUrl; r.style.maxWidth='120px'; r.style.border='1px solid #eee'; r.style.borderRadius='8px'; r.style.marginTop='6px';
+          r.alt = 'receipt';
+          r.addEventListener('click', ()=> window.open(o.receiptDataUrl, '_blank'));
+          payInfo.appendChild(r);
+        }
+        wrapper.appendChild(payInfo);
+
+        // admin actions
+        const actions = document.createElement('div'); actions.style.marginTop='8px'; actions.style.display='flex'; actions.style.gap='8px';
+        // verify/mark paid (only if awaiting_verification or pending)
+        const markPaidBtn = document.createElement('button'); markPaidBtn.className='btn-sm chip'; markPaidBtn.textContent='Mark Paid';
+        markPaidBtn.onclick = ()=>{
+          o.paymentStatus = 'paid';
+          save(KEY_ORDERS, orders);
+          renderAdminOrders();
+          alert('Marked as PAID');
+        };
+        const markDeliveredBtn = document.createElement('button'); markDeliveredBtn.className='btn-sm chip'; markDeliveredBtn.textContent='Mark Delivered';
+        markDeliveredBtn.onclick = ()=>{
+          o.paymentStatus = 'delivered';
+          save(KEY_ORDERS, orders);
+          renderAdminOrders();
+          alert('Marked as DELIVERED');
+        };
+        const deleteBtn = document.createElement('button'); deleteBtn.className='btn-sm'; deleteBtn.textContent='Delete';
+        deleteBtn.onclick = ()=>{
+          if(confirm('Delete this order?')){ orders = orders.filter(x=>x.id!==o.id); save(KEY_ORDERS, orders); renderAdminOrders(); alert('Deleted'); }
+        };
+
+        // only show markPaid if not paid yet
+        if(o.paymentStatus !== 'paid' && o.paymentStatus !== 'delivered') actions.appendChild(markPaidBtn);
+        // allow delivered only if paid
+        if(o.paymentStatus === 'paid') actions.appendChild(markDeliveredBtn);
+        actions.appendChild(deleteBtn);
+
+        wrapper.appendChild(actions);
+        wrapper.appendChild(document.createElement('hr'));
+        adminOrdersList.appendChild(wrapper);
+      });
+    }
+    renderAdminOrders();
+
+    refreshAdmin.addEventListener('click', ()=> renderAdminOrders());
+    clearOrdersBtn.addEventListener('click', ()=> {
+      if(confirm('Clear all orders?')){ orders = []; save(KEY_ORDERS, orders); renderAdminOrders(); alert('Cleared'); }
+    });
+
+    exportDataBtn.addEventListener('click', ()=>{
+      const blob = new Blob([JSON.stringify({products:dataProducts,orders,monthSales},null,2)],{type:'application/json'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href=url; a.download='five-queens-data.json'; a.click(); URL.revokeObjectURL(url);
     });
 
-    // --- Monthly Best Seller Modal/report
-    const reportModal   = document.getElementById('reportModal');
-    const openReport    = document.getElementById('openReport');
-    const reportMonth   = document.getElementById('reportMonth');
-    const reportContent = document.getElementById('reportContent');
+    importFile.addEventListener('change', e=>{
+      const f = e.target.files[0]; if(!f) return;
+      const r = new FileReader();
+      r.onload = () => {
+        try{
+          const obj = JSON.parse(r.result);
+          if(obj.orders) orders = obj.orders;
+          if(obj.products) dataProducts = obj.products;
+          if(obj.monthSales) monthSales = obj.monthSales;
+          save(KEY_ORDERS, orders); save(KEY_PRODUCTS, dataProducts); save(KEY_MONTH, monthSales);
+          renderProducts(); renderAdminOrders(); renderReport(); alert('Imported');
+        }catch(err){ alert('Invalid JSON'); console.error(err) }
+      };
+      r.readAsText(f);
+    });
 
-    openReport.addEventListener('click',()=>{ reportModal.style.display='flex'; reportMonth.value = new Date().toISOString().slice(0,7); renderReport(); });
-    reportModal.addEventListener('click',e=>{ if(e.target===reportModal) reportModal.style.display='none' });
-    reportMonth.addEventListener('change',renderReport);
+    closeAdmin.addEventListener('click', ()=> adminModal.style.display = 'none');
+
+    openAdmin.addEventListener('click', ()=> { adminModal.style.display = 'flex'; renderAdminOrders(); });
+
+    // ---------- Report ----------
+    openReport.addEventListener('click', ()=> { reportModal.style.display = 'flex'; reportMonth.value = new Date().toISOString().slice(0,7); renderReport(); });
+    closeReport.addEventListener('click', ()=> reportModal.style.display = 'none');
+    reportMonth.addEventListener('change', renderReport);
 
     function renderReport(){
       const m = reportMonth.value || new Date().toISOString().slice(0,7);
       const sales = monthSales[m] || {};
-      if(!Object.keys(sales||{}).length){
-        reportContent.innerHTML = `<div class="muted">No sales recorded for ${m}.</div>`; return;
-      }
-      // find top products
+      if(!Object.keys(sales||{}).length){ reportContent.innerHTML = `<div class="muted">No sales recorded for ${m}.</div>`; return; }
       const arr = Object.entries(sales).map(([pid,c])=>({pid,count:c}));
       arr.sort((a,b)=>b.count - a.count);
       const top = arr[0];
-      const ptop = dataProducts.find(x=>x.id===top.pid);
-      let html = `<div style="display:flex;gap:15px;align-items:center">
-        <div style="width:100px;height:100px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px #ccc"><img src="${ptop.img}" style="width:100%;height:100%;object-fit:cover"></div>
-        <div>
-          <div style="font-size:20px;font-weight:700">${ptop.title}</div>
-          <div class="meta">Best seller: <span style="font-weight:600">${top.count} pcs</span></div>
-        </div>
-      </div>`;
-      // Top 5 sellers
-      html += `<div style="margin-top:14px"><h4>Top sellers:</h4><ol style="margin:0;padding-left:22px;">` +
-        arr.slice(0,5).map(a=>{
-          const p = dataProducts.find(x=>x.id===a.pid);
-          return `<li>${p.title} — ${a.count} pcs</li>`;
-        }).join('') +
-        `</ol></div>`;
+      const ptop = dataProducts.find(x=>x.id===top.pid) || {title:top.pid,img:''};
+      let html = `<div style="display:flex;gap:15px;align-items:center"><div style="width:100px;height:100px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px #ccc"><img src="${ptop.img}" style="width:100%;height:100%;object-fit:cover"></div><div><div style="font-size:20px;font-weight:700">${ptop.title}</div><div class="meta">Best seller: <span style="font-weight:600">${top.count} pcs</span></div></div></div>`;
+      html += `<div style="margin-top:12px"><h4>Top sellers:</h4><ol style="margin:0;padding-left:22px;">` + arr.slice(0,5).map(a=>{ const p = dataProducts.find(x=>x.id===a.pid) || {title:a.pid}; return `<li>${p.title} — ${a.count} pcs</li>` }).join('') + `</ol></div>`;
       reportContent.innerHTML = html;
     }
 
-    // --- Data reload (refresh UI)
+    // ---------- Load/refresh UI ----------
     function loadEverything(){
       dataProducts = load(KEY_PRODUCTS, demoProducts);
-      orders      = load(KEY_ORDERS, []);
-      monthSales  = load(KEY_MONTH_SALES, {});
-      refreshAdminProducts(); renderProducts(); updateCartUI();
+      orders = load(KEY_ORDERS, []);
+      monthSales = load(KEY_MONTH, {});
+      cart = load(KEY_CART, {});
+      renderProducts();
+      updateCartUI();
+      renderAdminOrders();
+      renderReport();
     }
     loadEverything();
 
-    // Filter products (fix demo data)
-    dataProducts = dataProducts.filter(p=>p && p.id);
-    save(KEY_PRODUCTS, dataProducts);
+    // ---------- small utilities ----------
+    document.addEventListener('click', (e)=>{
+      // close modals if clicking outside
+      const modals = document.querySelectorAll('.modal-backdrop');
+      modals.forEach(m=>{
+        if(m.style.display === 'flex' && e.target === m) m.style.display = 'none';
+      });
+    });
 
-    // --- Tip/first open
+    // Save cart helper used above
+    function saveCart(){ save(KEY_CART, cart); updateCartUI(); }
+    // ensure function available in scope for quick calls
+    window.addCart = addCart;
+    window.openModal = openModal;
+    window.recordQuickSale = window.recordQuickSale;
+
+    // small tip for first-time user
     if(!localStorage.getItem('fq_seen_tip')){
       localStorage.setItem('fq_seen_tip','1');
-      setTimeout(()=>alert('Tip: Use Admin → Record Sales to simulate orders per month. Then use Monthly Best to view that month\'s best seller.'),900);
+      setTimeout(()=>alert('Tip: Use Admin → Orders to verify uploaded receipts and update order status to Paid or Delivered.'),900);
     }
   </script>
 </body>
